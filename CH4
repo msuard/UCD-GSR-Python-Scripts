@@ -1,0 +1,3321 @@
+class CH4():
+
+    import numpy
+    import scipy
+    import math
+    import SciUtil
+    import pylab
+    import matplotlib
+    import datetime
+    from mpl_toolkits.mplot3d import Axes3D
+    import sys
+
+    def processCH4(self,dataArray,picarroLagTime):
+        
+        ch4TimeArray=[]
+        ch4Array=[]
+        
+        
+        for n in range(0,len(dataArray)):
+            
+            ch4Time=[]
+            ch4=[]
+            numPoints=0
+            diff=0
+        
+       
+            #ch4Time = dataArray[n][:,0] #Defines the time values for CH4 concentration measurements plot
+            for i in range(0,len(dataArray[n])):
+                ch4Time.append(dataArray[n][i][0]-picarroLagTime)
+#    
+#            print ch4Time
+#            raw_input()                
+            
+            ch4 = self.numpy.interp(ch4Time,dataArray[n][:,0],dataArray[n][:,2]) #Interpolates ch4 values over time values previously defined
+    
+            #print 'CH4 #'+str(n+1)+': ' + str(ch4) +'\n'
+            
+            ch4TimeArray.append(ch4Time)
+            ch4Array.append(ch4)    
+            
+            #print ch4TimeArray
+        #print 'NumPoints= '+str(numPointsArray[0])
+
+        return(ch4TimeArray,ch4Array)
+    
+    def processCH4_Barstow(self,dataArray):
+        
+        ch4TimeArray=[]
+        ch4Array=[]
+        
+        
+        for n in range(0,len(dataArray)):
+            
+            ch4Time=[]
+            ch4=[]
+            numPoints=0
+            diff=0
+        
+       
+            ch4Time = dataArray[n][:,0] #Defines the time values for CH4 concentration measurements plot
+             # Specific time treatment for Barstow datafiles (3 next lines)
+            #ch4Time = self.numpy.arange(dataArray[n][0,0],dataArray[n][-1,0],1.000015/864000);
+            for i in range(1,len(ch4Time)):
+                ch4Time[i] = 24*(ch4Time[i] - int(ch4Time[0]))
+            ch4Time[0]=0
+            
+            ch4 = self.numpy.interp(ch4Time,dataArray[n][:,0],dataArray[n][:,2]) #Interpolates ch4 values over time values previously defined
+    
+            #print 'CH4 #'+str(n+1)+': ' + str(ch4) +'\n'
+            
+            ch4TimeArray.append(ch4Time)
+            ch4Array.append(ch4)    
+            
+            #print ch4TimeArray
+        #print 'NumPoints= '+str(numPointsArray[0])
+
+        return(ch4TimeArray,ch4Array)
+        
+    def cutCH4(self,ch4TimeArrayCut,ch4ArrayCut,startIndexArray,endIndexArray):
+        
+        for n in range(0,len(ch4ArrayCut)):
+                l=len(ch4ArrayCut[n])
+                ch4TimeArrayCut[n]=ch4TimeArrayCut[n][startIndexArray[n]:-endIndexArray[n]]
+                ch4ArrayCut[n]=ch4ArrayCut[n][startIndexArray[n]:-endIndexArray[n]]
+                
+                if startIndexArray[n]!=0 and endIndexArray[n]!=1:
+                    print 'Data File # '+str(n+1)+': [CH4] Data File cut before index '+str(startIndexArray[n])+' and after index '+str(l-endIndexArray[n])+'\n'
+                elif startIndexArray[n]!=0 and endIndexArray[n]==1:
+                    print 'Data File # '+str(n+1)+': [CH4] Data File cut before index '+str(startIndexArray[n])+'\n'
+                elif startIndexArray[n]==0 and endIndexArray[n]!=1:
+                    print 'Data File # '+str(n+1)+': [CH4] Data File cut after index '+str(l-endIndexArray[n])+'\n'
+                
+               
+        
+        return(ch4TimeArrayCut,ch4ArrayCut)
+    
+    
+    def processCH4JPLPicarro(self,dataArray,picarroLagTime):
+        
+        ch4TimeArray=[]
+        ch4Array=[]
+        
+        
+        for n in range(0,len(dataArray)):
+            
+            ch4Time=[]
+            ch4=[]
+            for i in range(0,len(dataArray[n])):
+                ch4Time.append(float(dataArray[n][i][5])-picarroLagTime)
+                ch4.append(float(dataArray[n][i][20]))
+            
+#            for i in range(0,len(dataArray[n])):
+#                ch4Time.append(self.numpy.float(dataArray[n][i][5])) #Defines the time values for CH4 concentration measurements plot
+#            
+#            
+#                ch4.append(self.numpy.float(dataArray[n][i][20]))
+    
+         
+            
+#            ch4TimeArray.append(ch4Time)
+#            ch4Array.append(ch4)    
+            
+            ch4TimeArray.append(self.numpy.array(ch4Time))
+            ch4Array.append(self.numpy.array(ch4))   
+        
+#        print len(ch4TimeArray)
+#        print len(ch4TimeArray[0])
+        return(ch4TimeArray,ch4Array) 
+        
+    def processCH4JPLCarve(self,dataArray,picarroLagTime):
+        
+        ch4TimeArray=[]
+        ch4Array=[]
+        
+        
+        for n in range(0,len(dataArray)):
+            
+            ch4Time=[]
+            ch4=[]
+            for i in range(0,len(dataArray[n])):
+                
+                ch4Time.append(float(dataArray[n][i][0])*24*3600+(self.datetime.datetime(2013,1,1)- self.datetime.datetime(1970,1,1)).total_seconds()-picarroLagTime)
+                
+                ch4.append(float(dataArray[n][i][5])/1000)
+            ch4Time=self.numpy.array(ch4Time)
+            ch4=self.numpy.array(ch4)
+#            for i in range(0,len(dataArray[n])):
+#                ch4Time.append(self.numpy.float(dataArray[n][i][5])) #Defines the time values for CH4 concentration measurements plot
+#            
+#            
+#                ch4.append(self.numpy.float(dataArray[n][i][20]))
+    
+         
+            
+            ch4TimeArray.append(ch4Time)
+            ch4Array.append(ch4)    
+            
+     
+
+        return(ch4TimeArray,ch4Array)
+        
+    def processCH4_Barstow(self,dataArray):
+        
+        ch4TimeArray=[]
+        ch4Array=[]
+        
+        
+        for n in range(0,len(dataArray)):
+            
+            ch4Time=[]
+            ch4=[]
+            numPoints=0
+            diff=0
+        
+       
+            ch4Time = dataArray[n][:,0] #Defines the time values for CH4 concentration measurements plot
+             # Specific time treatment for Barstow datafiles (3 next lines)
+            #ch4Time = self.numpy.arange(dataArray[n][0,0],dataArray[n][-1,0],1.000015/864000);
+            for i in range(1,len(ch4Time)):
+                ch4Time[i] = 24*(ch4Time[i] - int(ch4Time[0]))
+            ch4Time[0]=0
+            
+            ch4 = self.numpy.interp(ch4Time,dataArray[n][:,0],dataArray[n][:,2]) #Interpolates ch4 values over time values previously defined
+    
+            #print 'CH4 #'+str(n+1)+': ' + str(ch4) +'\n'
+            
+#            ch4TimeArray.append(ch4Time)
+#            ch4Array.append(ch4)    
+            
+            ch4TimeArray.append(self.numpy.array(ch4Time))
+            ch4Array.append(self.numpy.array(ch4)) 
+   
+            
+            #print ch4TimeArray
+        #print 'NumPoints= '+str(numPointsArray[0])
+
+        return(ch4TimeArray,ch4Array)
+        
+    def cutCH4(self,ch4TimeArray,ch4Array,startIndexArray,endIndexArray):
+        ch4TimeArrayCut=[]
+        ch4ArrayCut=[]
+        
+        for n in range(0,len(ch4Array)):
+                l=len(ch4Array[n])
+               
+                ch4TimeArrayCut.append(ch4TimeArray[n][startIndexArray[n]:-endIndexArray[n]])
+                ch4ArrayCut.append(ch4Array[n][startIndexArray[n]:-endIndexArray[n]])
+                
+                if startIndexArray[n]!=0 and endIndexArray[n]!=1:
+                    print 'Data File # '+str(n+1)+': [CH4] Data File cut before index '+str(startIndexArray[n])+' and after index '+str(l-endIndexArray[n])+'\n'
+                elif startIndexArray[n]!=0 and endIndexArray[n]==1:
+                    print 'Data File # '+str(n+1)+': [CH4] Data File cut before index '+str(startIndexArray[n])+'\n'
+                elif startIndexArray[n]==0 and endIndexArray[n]!=1:
+                    print 'Data File # '+str(n+1)+': [CH4] Data File cut after index '+str(l-endIndexArray[n])+'\n'
+                
+#        ch4TimeArrayCut=self.numpy.array(ch4TimeArrayCut)      
+#        ch4ArrayCut=self.numpy.array(ch4ArrayCut)      
+                 
+        
+        return(ch4TimeArrayCut,ch4ArrayCut)
+        
+        
+    def computeCH4SignalSkewness(self,ch4TimeArray,ch4Array):
+        
+        for n in range(0,len(ch4Array)):
+            
+            passCH4Skewness=0  
+                        
+            passCH4Variance=0
+            
+            passDuration=0
+        
+            meanCH4=self.numpy.nanmean(ch4Array)
+            
+            #print meanCH4
+        
+            for j in range(0,len(ch4Array[n])-1):
+                
+                if self.numpy.isnan(ch4TimeArray[n][j+1])!=True and self.numpy.isnan(ch4TimeArray[n][j])!=True:
+                                                
+                    dt=ch4TimeArray[n][j+1]-ch4TimeArray[n][j]
+                    
+                    passDuration+=dt
+                                                
+                    if self.numpy.isnan(ch4Array[n][j])!=True:
+                    
+                        passCH4Skewness+=((ch4Array[n][j]-meanCH4)**3)*dt
+                        
+                        passCH4Variance+=((ch4Array[n][j]-meanCH4)**2)*dt
+                
+                
+            
+            #if passCH4Skewness>0 and passCH4Variance>0:
+            
+            
+            passCH4StdDev=self.numpy.sqrt(passCH4Variance/passDuration)
+        
+            passCH4Skewness/=passDuration*(passCH4StdDev**3)
+            
+            print 'CH4 SIGNAL SKEWNESS FOR FLIGHT # '+str(n)+' = '+str(passCH4Skewness)+'\n'
+        
+        
+        return()
+
+#    def computeMovingMean(self,ch4Array,ch4TimeArray,MMTime):
+#        
+#        numPointsArray=[]
+#        for n in range(0,len(ch4TimeArray)):
+#            numPointsList=[]
+#            i=0
+#            numPoints=1
+#            diff=0
+#            
+#            while i<len(ch4TimeArray[n])-1:
+#                
+#                while diff<MMTime and (i+numPoints)<(len(ch4TimeArray[n])-1):
+#                    
+#                        diff=ch4TimeArray[n][i+numPoints]-ch4TimeArray[n][i]
+#                        #print diff
+#                        numPoints+=1  
+#                        
+#                numPointsList.append(numPoints)
+#                #print numPoints
+#                i+=numPoints
+#                numPoints=1
+#                diff=0
+#            numPointsArray.append(int(self.numpy.mean(numPointsList[0:-2])))    
+#            #print numPointsList[0:-2]
+#            
+#        ch4MovingMeanArray=[]
+#        ch4StandardDeviationArray=[]
+#        
+#        for n in range(0,len(ch4Array)):
+#            
+#            ch4MovingMean=[]
+#            ch4StandardDeviation=[]
+#
+#            ch4MovingMean,ch4StandardDeviation=self.SciUtil.MovingMean(ch4Array[n],numPointsArray[n])
+#                        
+#            ch4StandardDeviationArray.append(ch4StandardDeviation) 
+#            ch4MovingMeanArray.append(ch4MovingMean)
+#            
+#            print 'CH4 Moving Mean for data file #'+str(n+1)+' over ' +str(numPointsArray[n])+ ' points ('+str(MMTime)+'seconds flight): '+str(ch4MovingMeanArray[n])+'\n'
+#            #print 'CH$ Standard Deviation: ' + str(ch4StandardDeviation)
+#            
+#            
+#        return(ch4MovingMeanArray,ch4StandardDeviationArray,numPointsArray)
+        
+    def computeMovingMedian(self,ch4Array,ch4TimeArray,MMTime):
+        
+        numPointsArray=[]
+        for n in range(0,len(ch4TimeArray)):
+            numPointsList=[]
+            i=0
+            numPoints=1
+            diff=0
+            
+            while i<len(ch4TimeArray[n])-1:
+                
+                while diff<MMTime and (i+numPoints)<(len(ch4TimeArray[n])-1):
+                    
+                        diff=ch4TimeArray[n][i+numPoints]-ch4TimeArray[n][i]
+                        #print diff
+                        numPoints+=1  
+                        
+                numPointsList.append(numPoints)
+                #print numPoints
+                i+=numPoints
+                numPoints=1
+                diff=0
+            
+            numPointsArray.append(int(self.numpy.mean(numPointsList[0:-2])))    
+            #print numPointsList[0:-2]
+            
+        ch4MovingMedianArray=[]
+        ch4StandardDeviationArray=[]
+        
+        for n in range(0,len(ch4Array)):
+            
+            ch4MovingMedian=[]
+            ch4StandardDeviation=[]
+
+            ch4MovingMedian,ch4StandardDeviation=self.SciUtil.MovingMedian(ch4Array[n],numPointsArray[n])
+                        
+            ch4StandardDeviationArray.append(ch4StandardDeviation) 
+            ch4MovingMedianArray.append(ch4MovingMedian)
+            
+           # print 'CH4 Moving Median for data file #'+str(n+1)+' over ' +str(numPointsArray[n])+ ' points ('+str(MMTime)+'seconds flight): '+str(ch4MovingMedianArray[n])+'\n'
+           # print 'CH4 Standard Deviation for data file #'+str(n+1)+' over ' +str(numPointsArray[n])+ ' points ('+str(MMTime)+'seconds flight): '+str(ch4StandardDeviationArray[n])+'\n'
+            
+            
+        return(ch4MovingMedianArray,ch4StandardDeviationArray,numPointsArray)
+        
+    def computeMovingMedianLES(self,ch4Array,ch4TimeArray,MMTime):
+        
+        numPointsArray=[]
+        for n in range(0,len(ch4TimeArray)):
+            numPointsList=[]
+            i=0
+            numPoints=1
+            diff=0
+            
+            while i<len(ch4TimeArray[n])-1:
+                
+                while diff<MMTime and (i+numPoints)<(len(ch4TimeArray[n])-1):
+                    
+                        diff=ch4TimeArray[n][i+numPoints]-ch4TimeArray[n][i]
+                        #print diff
+                        numPoints+=1  
+                        
+                numPointsList.append(numPoints)
+                #print numPoints
+                i+=numPoints
+                numPoints=1
+                diff=0
+            
+            numPointsArray.append(int(self.numpy.mean(numPointsList[0:-2])))    
+            #print numPointsList[0:-2]
+            
+        ch4MovingMedianArray=[]
+        ch4StandardDeviationArray=[]
+        
+        for n in range(0,len(ch4Array)):
+            
+            ch4MovingMedian=[]
+            ch4StandardDeviation=[]
+
+            ch4MovingMedian,ch4StandardDeviation=self.SciUtil.MovingMedian(ch4Array[n],numPointsArray[n])
+                        
+            ch4StandardDeviationArray.append(ch4StandardDeviation) 
+            
+            LESMovingMedian=[]
+            for i in range(0,len(ch4Array[n])):
+                LESMovingMedian.append(0)
+            
+            ch4MovingMedianArray.append(LESMovingMedian)
+            
+           # print 'CH4 Moving Median for data file #'+str(n+1)+' over ' +str(numPointsArray[n])+ ' points ('+str(MMTime)+'seconds flight): '+str(ch4MovingMedianArray[n])+'\n'
+           # print 'CH4 Standard Deviation for data file #'+str(n+1)+' over ' +str(numPointsArray[n])+ ' points ('+str(MMTime)+'seconds flight): '+str(ch4StandardDeviationArray[n])+'\n'
+            
+            
+        return(ch4MovingMedianArray,ch4StandardDeviationArray,numPointsArray)
+        
+    def cleanCH4JPL(self,ch4TimeArray,ch4Array0,ch4MovingMedianArray):
+        
+        indexArray=[]
+        for n in range(0,len(ch4Array0)):
+            
+            indexArrayBuffer=[]
+            i=0
+            while i<len(ch4Array0[n]):
+                
+                if ch4Array0[n][i]>ch4MovingMedianArray[n][i]+0.08:
+                    detectUp=True
+                    dt=0
+                    k=0
+                    while detectUp==True and i+k+1<len(ch4TimeArray[n]):
+                        k+=1
+                        dt=ch4TimeArray[n][i+k]-ch4TimeArray[n][i]
+                        if ch4Array0[n][i+k]<ch4MovingMedianArray[n][i+k]+0.08:
+                            detectUp=False
+                    if dt>30:
+                        indexArrayBuffer.append([i,i+k])
+                        i+=k
+                    else:
+                        i+=1
+                    
+                elif ch4Array0[n][i]<ch4MovingMedianArray[n][i]-0.08:
+                    detectDown=True
+                    dt=0
+                    k=0
+                    while detectDown==True and i+k+1<len(ch4TimeArray[n]):
+                        k+=1
+                        dt=ch4TimeArray[n][i+k]-ch4TimeArray[n][i]
+                        if ch4Array0[n][i+k]>ch4MovingMedianArray[n][i+k]-0.08:
+                            detectDown=False
+                    if dt>30:
+                        indexArrayBuffer.append([i,i+k])
+                        i+=k
+                    else:
+                        i+=1
+                        
+                else:
+                    i+=1
+                
+            indexArray.append(indexArrayBuffer)   
+        
+        ch4Array=[]
+        for n in range(0,len(indexArray)):
+            ch4ArrayBuffer=[]
+            for i in range(0,len(indexArray[n])):
+                if i==0:
+                    startIndex=0
+                else:
+                    startIndex=indexArray[n][i-1][1]+2
+                    
+                for j in range(startIndex,indexArray[n][i][0]-2):
+                    ch4ArrayBuffer.append(ch4Array0[n][j])
+                for k in range(indexArray[n][i][0]-2,indexArray[n][i][1]+2):
+                    ch4ArrayBuffer.append(float('NaN'))
+            
+            if len(indexArray[n])>0:
+                for l in range(indexArray[n][-1][1]+2,len(ch4Array0[n])):
+                    ch4ArrayBuffer.append(ch4Array0[n][l])
+            
+            ch4Array.append(ch4ArrayBuffer)
+            
+          #  print len(ch4ArrayBuffer)
+          #  print len(ch4Array0[n])
+         
+        return(ch4Array)
+
+    def computeSpikes(self,ch4Threshold,ch4TimeArray,ch4Array,ch4MovingMedianArray,ch4StandardDeviationArray,flightTimeArray,pathLatitudeArrayKm,pathLongitudeArrayKm):
+        
+        spikesDataArray=[]
+        #print len(ch4Array)
+        
+        for n in range(0,len(ch4Array)):
+            
+            
+            minJump=[]
+            spikesIndices=[]
+            lowsIndices=[]
+            spikesData=[] #List that will contain index, max CH4 concentration value and integrated width of every spikes
+    
+            minJump=self.numpy.maximum(ch4StandardDeviationArray[n]*3.5,ch4Threshold) #Minimum jump from mean to spot a spike
+            spikesIndices = self.numpy.where(ch4Array[n] >= ch4MovingMedianArray[n] + minJump)[0] #Indices of ch4 list that are spotted as being part of "spikes" intervals of ch4
+            lowsIndices = self.numpy.where(ch4Array[n] < ch4MovingMedianArray[n]-ch4StandardDeviationArray[n]*0.0)[0] #Indices of ch4 list that are spotted as being part
+                                                                                #of "lows" intervals of ch4 (cannot be part of a spike)
+    
+            spikesCount=0
+            
+            #print 'Spikes Indices: '+ str(spikesIndices)+'\n'
+            #print 'Lows Indice: '+ str(lowsIndices)+'\n'
+    
+            
+    
+            if len(spikesIndices)>0:
+    
+                i=0 #Index (of spikeIndices list) that will be incemented in order to process values of spikeIndices
+                
+                while True:
+    
+                    spikeStartIndex=spikesIndices[i] #Starting index (of ch4 list) of the next spike to be processed
+    
+                    #print 'spikeStartIndex= '+str(spikeStartIndex)+'\n'
+    
+                    try:
+                        jPrev=self.numpy.where(lowsIndices<spikeStartIndex)[0][-1] #Index (of lowIndices list) of last element of lowIndices preceding the currently processed spike
+                    except:
+                        jPrev=0
+    
+                    #print 'jPrev= '+str(jPrev)+'\n'
+                    try:    
+                        jNext=self.numpy.where(lowsIndices>spikeStartIndex)[0][0] #Index (of lowIndices list) of first element of lowIndices following the currently processed spike
+                    except:
+                        jNext=float('NaN')
+                    #print 'jNext= '+str(jNext)+'\n'
+    
+                    if jNext==0:
+                        prevLowEndIndex=0 # Ask Ian about this: should we take 0 or spikeStartIndex or something else???
+                    else:
+                        prevLowEndIndex=lowsIndices[jPrev] #Index (of ch4 list) corresponding to the end of the low interval preceding currently processed spike
+    
+                    #print 'prevLowEndIndex= '+str(prevLowEndIndex)+'\n'
+                    if self.numpy.isnan(jNext)!=True:
+                        nextLowStartIndex=lowsIndices[jNext] #Index (of ch4 list) corresponding to the start of the low interval following currently processed spike
+                    else: nextLowStartIndex=spikesIndices[-1]
+                    #print 'nextLowStartIndex= '+str(nextLowStartIndex)+'\n'
+    
+                    spikeMaxCH4 = max(ch4Array[n][prevLowEndIndex:nextLowStartIndex]) #Maximum value of CH4 concentration in currently processed spike
+                    spikeMaxCH4Index = self.numpy.where(ch4Array[n][prevLowEndIndex:nextLowStartIndex]>=spikeMaxCH4)[0][0] + prevLowEndIndex #Index (of ch4 list)
+                                                                                                                          #corresponding to the first
+                                                                                                                          #time current spike reaches its
+                                                                                                                          #maximum CH4 concentration value
+    
+                    #spikeWidth = self.numpy.trapz(ch4Array[n][prevLowEndIndex:nextLowStartIndex]-ch4MovingMedianArray[n][prevLowEndIndex:nextLowStartIndex],None,.1)/(spikeMaxCH4-self.numpy.mean(ch4MovingMedianArray[n][prevLowEndIndex:nextLowStartIndex]))
+                    
+                    inf=self.numpy.where(flightTimeArray[n]<=ch4TimeArray[n][prevLowEndIndex])[0]
+                    sup=self.numpy.where(flightTimeArray[n]>=ch4TimeArray[n][nextLowStartIndex])[0]
+                    if len(inf)>0:
+                        flightprevLowEndIndex=inf[-1]
+                    else:
+                        flightprevLowEndIndex=0
+                    
+                    if len(sup)>0:
+                        flightnextLowStartIndex=sup[0]
+                    else:
+                        flightnextLowStartIndex=len(flightTimeArray[n])-1
+                        
+                    if len(inf)==0 and len(sup==0):
+                        print 'ERROR IN FLIGHT TIME VALUES vs CH4 TIME VALUES'
+                        spikeWidth =float('NaN')
+                        spikeHeading=float('NaN')
+                        spikeEquivalentHeight=float('NaN')
+                        spikeArea=float('NaN')
+                        spikeCH4Threshold=float('NaN')
+                        spikeSigma=float('NaN')
+                        
+                    else:
+                        spikeWidth=1000*self.numpy.sqrt((pathLongitudeArrayKm[n][flightnextLowStartIndex]-pathLongitudeArrayKm[n][flightprevLowEndIndex])**2+(pathLatitudeArrayKm[n][flightnextLowStartIndex]-pathLatitudeArrayKm[n][flightprevLowEndIndex])**2)
+                        spikeLon=1000*(pathLongitudeArrayKm[n][flightnextLowStartIndex]-pathLongitudeArrayKm[n][flightprevLowEndIndex])
+                        spikeLat=1000*(pathLatitudeArrayKm[n][flightnextLowStartIndex]-pathLatitudeArrayKm[n][flightprevLowEndIndex])
+                        
+                        
+                        spikeHeading=0
+                        if  spikeLon>=0:
+                            spikeHeading=self.numpy.arccos(spikeLat/self.numpy.sqrt(spikeLon**2+spikeLat**2))*180/3.14
+                 
+                        elif  spikeLon<0:
+                            spikeHeading=360-self.numpy.arccos(spikeLat/self.numpy.sqrt(spikeLon**2+spikeLat**2))*180/3.14
+                        else: spikeHeading=float('NaN')
+                        
+                        
+                        
+                        spikeDL=[]
+                        spikeDL.append(0)
+                        l=0
+                        for k in range(flightprevLowEndIndex+1,flightnextLowStartIndex):
+                            l+=1
+                            spikeDL.append(spikeDL[l-1]+1000*self.numpy.sqrt((pathLongitudeArrayKm[n][k-1]-pathLongitudeArrayKm[n][k])**2+(pathLatitudeArrayKm[n][k-1]-pathLatitudeArrayKm[n][k])**2))
+                        
+                        if  flightprevLowEndIndex+1==flightnextLowStartIndex:
+                            spikeDL.append(spikeDL[0]+1000*self.numpy.sqrt((pathLongitudeArrayKm[n][flightprevLowEndIndex]-pathLongitudeArrayKm[n][flightprevLowEndIndex+1])**2+(pathLatitudeArrayKm[n][flightprevLowEndIndex]-pathLatitudeArrayKm[n][flightprevLowEndIndex+1])**2))
+                        
+                        #print 'spikeDL'+str(spikeDL)
+#                        raw_input()
+                        
+                        
+                        spikeCH4=[]
+                        spikeCH4=self.numpy.interp(flightTimeArray[n][flightprevLowEndIndex:flightnextLowStartIndex],ch4TimeArray[n],ch4Array[n])
+                        if  flightprevLowEndIndex+1==flightnextLowStartIndex:
+                            spikeCH4=self.numpy.hstack((spikeCH4,self.numpy.array([ch4MovingMedianArray[n][nextLowStartIndex]+ch4Threshold])))
+#                        print 'spikech4'+str(spikeCH4)
+                        
+                        spikeCH4EquivalentHeight=[]
+                        spikeCH4Background=[]
+                        unityFunction=[]
+                        for k in range(0,len(spikeCH4)):
+                            
+                            spikeCH4Background.append(ch4MovingMedianArray[n][prevLowEndIndex]+k*(ch4MovingMedianArray[n][nextLowStartIndex]-ch4MovingMedianArray[n][prevLowEndIndex])/len(spikeCH4))
+                            spikeCH4EquivalentHeight.append(spikeCH4[k]-spikeCH4Background[k])
+                            unityFunction.append(1)
+                            #spikeCH4Height.append(spikeCH4[k]-spikeCH4MovingMedian)
+                        if self.numpy.abs(self.numpy.trapz(spikeDL))>0:
+                            spikeIntegratedEquivalentHeight=(2/self.numpy.trapz(unityFunction,spikeDL))*self.numpy.trapz(spikeCH4EquivalentHeight,spikeDL)
+                             #spikeEquivalentHeight=2*self.scipy.stats.nanmean(spikeCH4EquivalentHeight)
+                        else:
+                            spikeIntegratedEquivalentHeight=float('NaN')
+                         
+                        spikeArea=self.numpy.trapz(spikeCH4EquivalentHeight,spikeDL)
+                        spikeCH4Threshold=(minJump[prevLowEndIndex]+minJump[nextLowStartIndex])/2
+                        spikeEquivalentHeight=self.numpy.max(spikeCH4)-self.scipy.stats.nanmean(spikeCH4Background)
+                            
+                        
+    
+                        if spikeEquivalentHeight>spikeCH4Threshold:
+                            spikeSigma=spikeWidth/(2*self.math.sqrt(2*self.math.log(spikeEquivalentHeight/spikeCH4Threshold))) 
+                        
+                        else:
+                            spikeSigma=float('NaN')
+                            print 'WARNING! SPIKE SIGMA COMPUTATION ERROR FOR SPIKE#'+str(spikesCount)+' FLIGHT#'+str(n)+'\n'
+                        
+                        
+#                        print 'spikeHeight'+str(spikeHeight)
+#                        raw_input()
+#                        #In case flight data starts after the beginning of current spike:
+#                        if len(inf)==0:
+#                            nb=nextLowStartIndex-prevLowEndIndex-(flightnextLowStartIndex-flightprevLowEndIndex)
+#                            #We take the first speed value of flight data and assume the speed was the same since the beginning of the spike
+#                            averageZonalSpeed=
+#                            averageMeridionalSpeed=
+#                            spikeFinalLatitudeKm=0
+#                            
+#                            spikeWidth+=nb*self.numpy.sqrt(zonalSpeedArray[n][flightprevLowEndIndex]**2+meridionalSpeedArray[n][flightprevLowEndIndex]**2)*(flightTimeArray[n][1]-flightTimeArray[n][0])
+#                        #In case flight data ends before the end of current spike
+#                        elif len(sup)==0:
+#                            nb=nextLowStartIndex-prevLowEndIndex-(flightnextLowStartIndex-flightprevLowEndIndex)
+#                            #We take the last speed value of flight data and assume the speed stays the same until the end of the flight
+#                            spikeWidth+=nb*self.numpy.sqrt(zonalSpeedArray[n][flightnextLowStartIndex]**2+meridionalSpeedArray[n][flightnextLowStartIndex]**2)*(flightTimeArray[n][-1]-flightTimeArray[n][-2])
+#                        
+                        
+                    if spikeWidth>0 and spikeMaxCH4<50:
+                        spikesCount+=1
+                        
+#                        if n==4 and spikesCount==15:
+#                            print "SPIKE # 14 FROM FLIGHT # 0 ERASED"
+#                        else:
+#                            spikesData.append([prevLowEndIndex,nextLowStartIndex,spikeMaxCH4Index,spikeMaxCH4,spikeWidth,spikeHeading,spikeHeight,spikeEquivalentHeight])
+#                        if spikeEquivalentHeight>100:
+#                            print 'flight#'+str(n)
+#                            print 'spike#'+str(len(spikesData))
+#                            raw_input()
+                        spikesData.append([prevLowEndIndex,nextLowStartIndex,spikeMaxCH4Index,spikeMaxCH4,spikeWidth,spikeHeading,spikeEquivalentHeight,spikeIntegratedEquivalentHeight,len(spikesData),spikeArea,spikeCH4Threshold,spikeSigma])
+    
+                    nextSpikesIndices=self.numpy.where(spikesIndices>nextLowStartIndex)[0] #Indices (of spikesIndices list) of next spike to be processed
+                    if len(nextSpikesIndices)>0:
+                        i=nextSpikesIndices[0]  #Index (of spikesIndices list) of next spike to be processed
+                    else:
+                        break
+    
+                if len(spikesData)>0:
+                    
+                    print '  '+str(len(spikesData))+' Spikes Detected for data file #'+str(n+1)+'\n'
+                    
+                    print '[Starting Index, Ending Index, Max [CH4] Index, Max [CH4] Value (ppm), Width (m), Plane Heading (deg VECT), Mean Height (ppmv), Mean Equivalent Height (ppmv), Spike Number]'+'\n'
+                    
+                    print str(spikesData) +'\n'
+    
+                    spikesDataArray.append(spikesData)
+    
+                else:
+    
+                    print 'NO SIGNIFICANT SPIKE DETECTED for data file #'+str(n+1)+'\n'
+                    spikesDataArray.append([])
+                
+            else:
+    
+                print 'NO SPIKES DETECTED for data file #'+str(n+1)+'\n'
+                spikesDataArray.append([])
+                
+        return(spikesDataArray)
+        
+    def computeSpikes2(self,ch4Threshold,stdDevFactor,ch4TimeArray,ch4Array,ch4MovingMedianArray,ch4StandardDeviationArray,flightTimeArray,pathLatitudeArrayKm,pathLongitudeArrayKm,pathAltitudeArray):
+        
+        spikesDataArray=[]
+        #print len(ch4Array)
+        
+        for n in range(0,len(ch4Array)):
+            
+            
+            spikesMinJumpList=[]
+            spikesIndices=[]
+            lowsMaxJumpList=[]
+            lowsIndices=[]
+            spikesData=[] #List that will contain index, max CH4 concentration value and integrated width of every spikes
+    
+            spikesMinJumpList=self.numpy.maximum(ch4StandardDeviationArray[n]*stdDevFactor,ch4Threshold) #Minimum jump from mean to spot a spike
+            spikesIndices = self.numpy.where(ch4Array[n] >= ch4MovingMedianArray[n] + spikesMinJumpList)[0] #Indices of ch4 list that are spotted as being part of "spikes" intervals of ch4
+            
+            lowsMaxJumpList=self.numpy.minimum(ch4StandardDeviationArray[n]*stdDevFactor,ch4Threshold)
+            lowsIndices = self.numpy.where(ch4Array[n] < ch4MovingMedianArray[n]+lowsMaxJumpList)[0] #Indices of ch4 list that are spotted as being part
+            #lowsIndices = self.numpy.where(ch4Array[n] < ch4MovingMedianArray[n] + minJump)[0] #Indices of ch4 list that are spotted as being part of "spikes" intervals of ch4
+                                                                                #of "lows" intervals of ch4 (cannot be part of a spike)
+    
+            spikesCount=0
+            
+            #print 'Spikes Indices: '+ str(spikesIndices)+'\n'
+            #print 'Lows Indice: '+ str(lowsIndices)+'\n'
+    
+            
+    
+            if len(spikesIndices)>0:
+    
+                i=0 #Index (of spikeIndices list) that will be incemented in order to process values of spikeIndices
+                
+                while True:
+                    
+                    
+    
+                    #spikeStartIndex=spikesIndices[i] #Starting index (of ch4 list) of the next spike to be processed
+                    spikeStartIndex=lowsIndices[self.numpy.where(lowsIndices<=spikesIndices[i])[0][-1]]
+                    try:    
+                        jNext=self.numpy.where(lowsIndices>spikeStartIndex)[0][0] #Index (of lowIndices list) of first element of lowIndices following the currently processed spike
+                    except:
+                        jNext=float('NaN')
+                    
+                    if self.numpy.isnan(jNext)!=True:
+                        #spikeEndIndex=spikesIndices[self.numpy.where(spikesIndices<=lowsIndices[jNext])[0][-1]] 
+                        spikeEndIndex=lowsIndices[jNext]+1
+                    
+                    else: spikeEndIndex=spikesIndices[-1]
+                    
+                    
+                    
+                    
+                    if spikeEndIndex-spikeStartIndex>2:
+                    
+                        spikeMaxCH4 = max(ch4Array[n][spikeStartIndex:spikeEndIndex]) #Maximum value of CH4 concentration in currently processed spike
+                        spikeMaxCH4Index = self.numpy.where(ch4Array[n][spikeStartIndex:spikeEndIndex]>=spikeMaxCH4)[0][0] + spikeStartIndex 
+                         
+                        '''In the following we cut spikes so that they only have one local maximum
+                        and the start and end of the spike is approximately at the same CH4 concentration
+                        spikeStartIndex2 and spikeEndIndex2 will then be used when looking at the width of the spike''' 
+                        
+#                        print spikeStartIndex
+#                        print spikeEndIndex
+                        
+                        spikeCH4Diff=[]
+                        for k in range(spikeStartIndex,spikeEndIndex):
+                            spikeCH4Diff.append((ch4Array[n][k+1]-ch4Array[n][k])/(ch4TimeArray[n][k+1]-ch4TimeArray[n][k]))
+                        
+                        spikeStartIndex2=spikeStartIndex
+                        ch4DiffPositive=True
+                        for k in range(spikeMaxCH4Index-1,spikeStartIndex,-1):
+                            if spikeCH4Diff[k-spikeStartIndex]<=0:
+                                ch4DiffPositive=False
+                                break
+                        if ch4DiffPositive==False:
+                            spikeStartIndex2=k+1
+                        
+                        spikeEndIndex2=spikeEndIndex
+                        ch4DiffNegative=True
+                        for k in range(spikeMaxCH4Index,spikeEndIndex-1,1):
+                            if spikeCH4Diff[k-spikeStartIndex]>=0:
+                                ch4DiffNegative=False
+                                break
+                        if ch4DiffNegative==False:
+                            spikeEndIndex2=k    
+                        
+#                        print ch4Array[n][spikeStartIndex2]
+#                        print ch4Array[n][spikeEndIndex2]
+#                        print ch4Array[n][spikeEndIndex2]<ch4Array[n][spikeStartIndex2]
+                        if ch4Array[n][spikeEndIndex2]>ch4Array[n][spikeStartIndex2]:
+                            k=0
+                            while ch4Array[n][spikeEndIndex2]>ch4Array[n][spikeStartIndex2+k]:
+                                k+=1
+                            spikeStartIndex2=spikeStartIndex2+k-1
+                                
+                        if ch4Array[n][spikeEndIndex2]<ch4Array[n][spikeStartIndex2]:
+                            k=0
+                            while ch4Array[n][spikeEndIndex2-k]<ch4Array[n][spikeStartIndex2]:
+                                k+=1
+                            spikeEndIndex2=spikeEndIndex2-k+1
+                            
+#                        print ch4Array[n][spikeStartIndex2]
+#                        print ch4Array[n][spikeEndIndex2]    
+#                        raw_input()
+#                        print spikeStartIndex
+#                        print spikeEndIndex
+                        #print '\n'
+                        ''' END ''' 
+                         
+                         
+                        inf=self.numpy.where(flightTimeArray[n]<=ch4TimeArray[n][spikeStartIndex2])[0]
+                        sup=self.numpy.where(flightTimeArray[n]>=ch4TimeArray[n][spikeEndIndex2])[0]
+                        
+                        if len(inf)>0:
+                            flightStartIndex2=inf[-1]
+                        else:
+                            flightStartIndex2=0
+                        
+                        if len(sup)>0:
+                            flightEndIndex2=sup[0]
+                        else:
+                            flightEndIndex2=len(flightTimeArray[n])-1
+                            
+                        if len(inf)==0 and len(sup==0):
+                            print 'ERROR IN FLIGHT TIME VALUES vs CH4 TIME VALUES'
+                           
+                            
+                            spikeWidth =float('NaN')
+                            spikeHeading=float('NaN')
+                            spikeEquivalentHeight=float('NaN')
+                            spikeArea=float('NaN')
+                            spikeCH4Threshold=float('NaN')
+                            spikeSigma=float('NaN')
+                            
+                        else:
+                            spikeWidth=self.numpy.sqrt((1000*pathLongitudeArrayKm[n][flightEndIndex2]-1000*pathLongitudeArrayKm[n][flightStartIndex2])**2+(1000*pathLatitudeArrayKm[n][flightEndIndex2]-1000*pathLatitudeArrayKm[n][flightStartIndex2])**2+(pathAltitudeArray[n][flightEndIndex2]-pathAltitudeArray[n][flightStartIndex2])**2)
+                            spikeLon=1000*(pathLongitudeArrayKm[n][flightEndIndex2]-pathLongitudeArrayKm[n][flightStartIndex2])
+                            spikeLat=1000*(pathLatitudeArrayKm[n][flightEndIndex2]-pathLatitudeArrayKm[n][flightStartIndex2])
+                            
+                            
+                            spikeHeading=0
+                            if  spikeLon>=0:
+                                spikeHeading=self.numpy.arccos(spikeLat/self.numpy.sqrt(spikeLon**2+spikeLat**2))*180/3.14
+                     
+                            elif  spikeLon<0:
+                                spikeHeading=360-self.numpy.arccos(spikeLat/self.numpy.sqrt(spikeLon**2+spikeLat**2))*180/3.14
+                            else: spikeHeading=float('NaN')
+                            
+                            
+                            
+                            spikeDL=[]
+                            spikeDL.append(0)
+                            l=0
+                            for k in range(flightStartIndex2+1,flightEndIndex2):
+                                l+=1
+                                spikeDL.append(spikeDL[l-1]+1000*self.numpy.sqrt((pathLongitudeArrayKm[n][k-1]-pathLongitudeArrayKm[n][k])**2+(pathLatitudeArrayKm[n][k-1]-pathLatitudeArrayKm[n][k])**2))
+                            
+                            if  flightStartIndex2+1==flightEndIndex2:
+                                spikeDL.append(spikeDL[0]+1000*self.numpy.sqrt((pathLongitudeArrayKm[n][flightStartIndex2]-pathLongitudeArrayKm[n][flightStartIndex2+1])**2+(pathLatitudeArrayKm[n][flightStartIndex2]-pathLatitudeArrayKm[n][flightStartIndex2+1])**2))
+            
+                            spikeCH4=[]
+                            spikeCH4=self.numpy.interp(flightTimeArray[n][flightStartIndex2:flightEndIndex2],ch4TimeArray[n],ch4Array[n])
+                            if  flightStartIndex2+1==flightEndIndex2:
+                                spikeCH4=self.numpy.hstack((spikeCH4,self.numpy.array([ch4MovingMedianArray[n][spikeEndIndex2]+ch4Threshold])))
+                            
+                            spikeCH4Background=[]
+                            spikeCH4Background=self.numpy.interp(flightTimeArray[n][flightStartIndex2:flightEndIndex2],ch4TimeArray[n],ch4MovingMedianArray[n])
+                            if  flightStartIndex2+1==flightEndIndex2:
+                                spikeCH4Background=self.numpy.hstack((spikeCH4Background,self.numpy.array([ch4MovingMedianArray[n][spikeEndIndex2]])))
+                                
+                            
+                            spikeCH4EquivalentHeightList=[]
+                            unityFunction=[]
+                            
+                            for k in range(0,len(spikeCH4)):
+                                 
+                                spikeCH4EquivalentHeightList.append(spikeCH4[k]-spikeCH4Background[k])
+                                unityFunction.append(1)
+                                #spikeCH4Height.append(spikeCH4[k]-spikeCH4MovingMedian)
+                            if self.numpy.abs(self.numpy.trapz(spikeDL))>0:
+                                spikeIntegratedEquivalentHeight=(2/self.numpy.trapz(unityFunction,spikeDL))*self.numpy.trapz(spikeCH4EquivalentHeightList,spikeDL)
+                                 #spikeEquivalentHeight=2*self.scipy.stats.nanmean(spikeCH4EquivalentHeight)
+                            else:
+                                spikeIntegratedEquivalentHeight=float('NaN')
+                             
+                            spikeArea=self.numpy.trapz(spikeCH4EquivalentHeightList,spikeDL)
+                            spikeCH4Threshold=self.scipy.stats.nanmean(spikesMinJumpList[spikeStartIndex2:spikeEndIndex2])
+                            spikeCH4BottomLimit=self.scipy.stats.nanmean([ch4Array[n][spikeStartIndex2],ch4Array[n][spikeEndIndex2]])-self.scipy.stats.nanmean(spikeCH4Background)
+                            spikeEquivalentHeight=spikeMaxCH4-self.scipy.stats.nanmean(spikeCH4Background)
+                                
+                            
+        
+                            if spikeEquivalentHeight>0 and spikeCH4BottomLimit>0 and spikeEquivalentHeight>spikeCH4BottomLimit:
+                                spikeSigma=spikeWidth/(2*self.math.sqrt(2*self.math.log(spikeEquivalentHeight/spikeCH4BottomLimit))) 
+                            
+                            else:
+                                spikeSigma=float('NaN')
+                                print 'WARNING! SPIKE SIGMA COMPUTATION ERROR FOR SPIKE#'+str(spikesCount)+' FLIGHT#'+str(n)+'\n'
+                            
+                            
+                            
+                            if spikeWidth>0 and spikeMaxCH4<50:
+                                spikesCount+=1
+                            
+                                spikesData.append([spikeStartIndex2,spikeEndIndex2,spikeMaxCH4Index,spikeMaxCH4,spikeWidth,spikeHeading,spikeEquivalentHeight,spikeIntegratedEquivalentHeight,len(spikesData),spikeArea,spikeCH4Threshold,spikeSigma])
+                                
+                            
+                    nextSpikesIndices=self.numpy.where(spikesIndices>spikeEndIndex)[0] #Indices (of spikesIndices list) of next spike to be processed
+                    
+                    if len(nextSpikesIndices)>0:
+                        i=nextSpikesIndices[0]  #Index (of spikesIndices list) of next spike to be processed
+                    else:
+                        break
+    
+                if len(spikesData)>0:
+                    
+                    print '  '+str(len(spikesData))+' Spikes Detected for data file #'+str(n+1)+'\n'
+                    
+                    print '[Starting Index, Ending Index, Max [CH4] Index, Max [CH4] Value (ppm), Width (m), Plane Heading (deg VECT), Mean Height (ppmv), Mean Equivalent Height (ppmv), Spike Number,Spike Area, Spike CH4 Threshold, Spike Sigma]'+'\n'
+                    
+                    print str(spikesData) +'\n'
+    
+                    spikesDataArray.append(spikesData)
+    
+                else:
+    
+                    print 'NO SIGNIFICANT SPIKE DETECTED for data file #'+str(n+1)+'\n'
+                    spikesDataArray.append([])
+                
+            else:
+    
+                print 'NO SPIKES DETECTED for data file #'+str(n+1)+'\n'
+                spikesDataArray.append([])
+                
+        return(spikesDataArray)
+            
+    def computeSpikes3(self,ch4ThresholdList,stdDevFactorList,minSpikeHeight,ch4TimeArray,ch4Array,ch4MovingMedianArray,ch4StandardDeviationArray,flightTimeArray,pathLatitudeArrayKm,pathLongitudeArrayKm,pathAltitudeArray):
+        
+        spikesDataArray=[]
+        #print len(ch4Array)
+        
+        for n in range(0,len(ch4Array)):
+            
+            
+            spikesMinJumpList=[]
+            spikesIndices=[]
+            lowsMaxJumpList=[]
+            lowsIndices=[]
+            spikesData=[] #List that will contain index, max CH4 concentration value and integrated width of every spikes
+    
+            spikesMinJumpList=self.numpy.maximum(ch4StandardDeviationArray[n]*stdDevFactorList[n],ch4ThresholdList[n]) #Minimum jump from mean to spot a spike
+            spikesIndices = self.numpy.where(ch4Array[n] >= ch4MovingMedianArray[n] + spikesMinJumpList)[0] #Indices of ch4 list that are spotted as being part of "spikes" intervals of ch4
+            
+            lowsMaxJumpList=self.numpy.minimum(ch4StandardDeviationArray[n]*stdDevFactorList[n],ch4ThresholdList[n])
+            lowsIndices = self.numpy.where(ch4Array[n] <= ch4MovingMedianArray[n]+lowsMaxJumpList)[0] #Indices of ch4 list that are spotted as being part
+            #lowsIndices = self.numpy.where(ch4Array[n] < ch4MovingMedianArray[n] + minJump)[0] #Indices of ch4 list that are spotted as being part of "spikes" intervals of ch4
+                                                                                #of "lows" intervals of ch4 (cannot be part of a spike)
+    
+            spikesCount=0
+            
+            #print 'Spikes Indices: '+ str(spikesIndices)+'\n'
+            #print 'Lows Indice: '+ str(lowsIndices)+'\n'
+    
+            
+    
+            if len(spikesIndices)>0:
+    
+                i=0 #Index (of spikeIndices list) that will be incemented in order to process values of spikeIndices
+                
+                while True:
+                    
+                    
+    
+                    #spikeStartIndex=spikesIndices[i] #Starting index (of ch4 list) of the next spike to be processed
+                    try:
+                        spikeStartIndex=lowsIndices[self.numpy.where(lowsIndices<=spikesIndices[i])[0][-1]]
+                    except:
+                        spikeStartIndex=0
+                    try:    
+                        jNext=self.numpy.where(lowsIndices>spikeStartIndex)[0][0] #Index (of lowIndices list) of first element of lowIndices following the currently processed spike
+                    except:
+                        jNext=float('NaN')
+                    
+                    if self.numpy.isnan(jNext)!=True:
+                        #spikeEndIndex=spikesIndices[self.numpy.where(spikesIndices<=lowsIndices[jNext])[0][-1]] 
+                        spikeEndIndex=lowsIndices[jNext]+1
+                    
+                    else: spikeEndIndex=spikesIndices[-1]
+                    
+                    if spikeEndIndex==len(ch4Array[n]):
+                        spikeEndIndex-=1
+                    
+                    
+                    
+                    if spikeEndIndex-spikeStartIndex>2:
+                        
+                        
+                        spikeCH4Diff=[]
+                        for k in range(spikeStartIndex,spikeEndIndex):
+                            spikeCH4Diff.append((ch4Array[n][k+1]-ch4Array[n][k])/(ch4TimeArray[n][k+1]-ch4TimeArray[n][k]))
+                        spikeMaxima=[]
+                        spikeMaximaIndex=[]
+                        for k in range(0,len(spikeCH4Diff)-1):
+                            if spikeCH4Diff[k]>0 and spikeCH4Diff[k+1]<0:
+                                spikeMaxima.append(ch4Array[n][spikeStartIndex+k+1])
+                                spikeMaximaIndex.append(spikeStartIndex+k+1)
+                        
+                        
+                        
+                        
+                        
+                        spikeStartIndexList=[]
+                        spikeEndIndexList=[]
+                        
+                        for j in range(0,len(spikeMaxima)):
+                            
+                            if spikeMaxima[j]>ch4MovingMedianArray[n][spikeMaximaIndex[j]]+spikesMinJumpList[spikeMaximaIndex[j]]:
+                                
+                                '''In the following we cut spikes so that they only have one local maximum''' 
+                                spikeStartIndex2=spikeStartIndex
+                                ch4DiffPositive=True
+                                for k in range(spikeMaximaIndex[j]-1,spikeStartIndex,-1):
+                                    if spikeCH4Diff[k-spikeStartIndex]<=0:
+                                        ch4DiffPositive=False
+                                        break
+                                if ch4DiffPositive==False:
+                                    spikeStartIndex2=k+1
+                                
+                                spikeEndIndex2=spikeEndIndex
+                                ch4DiffNegative=True
+                                for k in range(spikeMaximaIndex[j],spikeEndIndex-1,1):
+                                    if spikeCH4Diff[k-spikeStartIndex]>=0:
+                                        ch4DiffNegative=False
+                                        break
+                                if ch4DiffNegative==False:
+                                    spikeEndIndex2=k    
+    
+#                                if ch4Array[n][spikeEndIndex2]>ch4Array[n][spikeStartIndex2]:
+#                                    k=0
+#                                    while ch4Array[n][spikeEndIndex2]>ch4Array[n][spikeStartIndex2+k]:
+#                                        k+=1
+#                                    spikeStartIndex2=spikeStartIndex2+k-1
+#                                        
+#                                if ch4Array[n][spikeEndIndex2]<ch4Array[n][spikeStartIndex2]:
+#                                    k=0
+#                                    while ch4Array[n][spikeEndIndex2-k]<ch4Array[n][spikeStartIndex2]:
+#                                        k+=1
+#                                    spikeEndIndex2=spikeEndIndex2-k+1
+                                spikeStartIndexList.append(spikeStartIndex2)
+                                spikeEndIndexList.append(spikeEndIndex2)
+                                '''END'''
+                        
+                        
+                        for j in range(0,len(spikeStartIndexList)):
+                        
+                            spikeMaxCH4 = self.numpy.max(ch4Array[n][spikeStartIndexList[j]:spikeEndIndexList[j]+1]) #Maximum value of CH4 concentration in currently processed spike
+                            spikeMaxCH4Index = self.numpy.where(ch4Array[n][spikeStartIndexList[j]:spikeEndIndexList[j]+1]>=spikeMaxCH4)[0][0] + spikeStartIndexList[j] 
+                              
+                             
+                            inf=self.numpy.where(flightTimeArray[n]<=ch4TimeArray[n][spikeStartIndexList[j]])[0]
+                            sup=self.numpy.where(flightTimeArray[n]>=ch4TimeArray[n][spikeEndIndexList[j]])[0]
+                            
+                            if len(inf)>0:
+                                flightStartIndex=inf[-1]
+                            else:
+                                flightStartIndex=0
+                            
+                            if len(sup)>0:
+                                flightEndIndex=sup[0]
+                            else:
+                                flightEndIndex=len(flightTimeArray[n])-1
+                                
+                            if len(inf)==0 and len(sup==0):
+                                print 'ERROR IN FLIGHT TIME VALUES vs CH4 TIME VALUES'
+                               
+                                
+                                spikeWidth =float('NaN')
+                                spikeHeading=float('NaN')
+                                spikeEquivalentHeight=float('NaN')
+                                spikeArea=float('NaN')
+                                
+                                spikeSigma=float('NaN')
+                                
+                                
+                                
+                                
+                            else:
+                                spikeLon=1000*(pathLongitudeArrayKm[n][flightEndIndex]-pathLongitudeArrayKm[n][flightStartIndex])
+                                spikeLat=1000*(pathLatitudeArrayKm[n][flightEndIndex]-pathLatitudeArrayKm[n][flightStartIndex])
+                                
+                                
+                                spikeHeading=0
+                                if  spikeLon>=0:
+                                    spikeHeading=self.numpy.arccos(spikeLat/self.numpy.sqrt(spikeLon**2+spikeLat**2))*180/3.14
+                         
+                                elif  spikeLon<0:
+                                    spikeHeading=360-self.numpy.arccos(spikeLat/self.numpy.sqrt(spikeLon**2+spikeLat**2))*180/3.14
+                                else: spikeHeading=float('NaN')
+                                
+                                '''ATTENTION: be careful if using the following computed variables, '''
+                                
+                                spikeDL=[]
+                                spikeDL.append(0)
+                                l=0
+                                for k in range(flightStartIndex+1,flightEndIndex):
+                                    l+=1
+                                    spikeDL.append(spikeDL[l-1]+1000*self.numpy.sqrt((pathLongitudeArrayKm[n][k-1]-pathLongitudeArrayKm[n][k])**2+(pathLatitudeArrayKm[n][k-1]-pathLatitudeArrayKm[n][k])**2))
+                                
+                                if  flightStartIndex+1==flightEndIndex:
+                                    spikeDL.append(spikeDL[0]+1000*self.numpy.sqrt((pathLongitudeArrayKm[n][flightStartIndex]-pathLongitudeArrayKm[n][flightStartIndex+1])**2+(pathLatitudeArrayKm[n][flightStartIndex]-pathLatitudeArrayKm[n][flightStartIndex+1])**2))
+                
+                                spikeCH4=[]
+                                spikeCH4=self.numpy.interp(flightTimeArray[n][flightStartIndex:flightEndIndex],ch4TimeArray[n],ch4Array[n])
+                                if  flightStartIndex+1==flightEndIndex:
+                                    spikeCH4=self.numpy.hstack((spikeCH4,self.numpy.array([ch4MovingMedianArray[n][spikeEndIndexList[j]]+ch4ThresholdList[n]])))
+                                
+                                spikeCH4Background=[]
+                                spikeCH4Background=self.numpy.interp(flightTimeArray[n][flightStartIndex:flightEndIndex],ch4TimeArray[n],ch4MovingMedianArray[n])
+                                if  flightStartIndex+1==flightEndIndex:
+                                    spikeCH4Background=self.numpy.hstack((spikeCH4Background,self.numpy.array([ch4MovingMedianArray[n][spikeEndIndexList[j]]])))
+                                    
+                                
+                                spikeCH4EquivalentHeightList=[]
+                                unityFunction=[]
+                                
+                                for k in range(0,len(spikeCH4)):
+                                     
+                                    spikeCH4EquivalentHeightList.append(spikeCH4[k]-spikeCH4Background[k])
+                                    unityFunction.append(1)
+                                    #spikeCH4Height.append(spikeCH4[k]-spikeCH4MovingMedian)
+                                if self.numpy.abs(self.numpy.trapz(spikeDL))>0:
+                                    spikeIntegratedEquivalentHeight=(2/self.numpy.trapz(unityFunction,spikeDL))*self.numpy.trapz(spikeCH4EquivalentHeightList,spikeDL)
+                                     #spikeEquivalentHeight=2*self.scipy.stats.nanmean(spikeCH4EquivalentHeight)
+                                else:
+                                    spikeIntegratedEquivalentHeight=float('NaN')
+                                 
+                                spikeArea=self.numpy.trapz(spikeCH4EquivalentHeightList,spikeDL)
+#                                '''ATTENTION, THE FOLLOWING VARIABLE ch4Threshold IS NOT Hlod!!!'''
+#                                spikeCH4Threshold=self.scipy.stats.nanmean(spikesMinJumpList[spikeStartIndexList[j]:spikeEndIndexList[j]])
+#                                
+                                '''END'''
+                                
+                                '''In the following we interpolate the time,latitude,longitude and altitude values (end and start) of the spike
+                                so that its starting end ending points are at the same [CH4] for width calculation purposes'''
+                               
+                                
+                                
+                                if ch4Array[n][spikeStartIndexList[j]]>ch4Array[n][spikeEndIndexList[j]]:
+                                    
+                                    spikeBottomindex=spikeStartIndexList[j]
+                                    
+                                    
+                                    l=0
+                                    while ch4Array[n][spikeStartIndexList[j]]>ch4Array[n][spikeEndIndexList[j]-l]:
+                                        l+=1
+                                    k=l-1
+                                    
+                                    spikeEndIndexList[j]=spikeEndIndexList[j]-k
+                                
+                                    inf2=self.numpy.where(flightTimeArray[n]<=ch4TimeArray[n][spikeStartIndexList[j]])[0]
+                                    
+                                    if len(inf2)>0:
+                                        flightStartIndex2=inf2[-1]
+                                    else:
+                                        flightStartIndex2=0
+                                
+                                
+                                    sup2=self.numpy.where(flightTimeArray[n]>=ch4TimeArray[n][spikeEndIndexList[j]])[0]
+                                    
+                                    if len(sup2)>0:
+                                        flightEndIndex2=sup2[0]
+                                    else:
+                                        flightEndIndex2=len(flightTimeArray[n])-1
+                                        
+                                        
+                                    
+                                    spikeStartLatKm=pathLatitudeArrayKm[n][flightStartIndex]
+                                    spikeStartLonKm=pathLongitudeArrayKm[n][flightStartIndex]
+                                    spikeStartAlt=pathAltitudeArray[n][flightStartIndex]
+                                    
+                                    spikeEndLatKm=pathLatitudeArrayKm[n][flightEndIndex2-1]+(ch4Array[n][spikeStartIndexList[j]]-ch4Array[n][spikeEndIndexList[j]-k-1])*(pathLatitudeArrayKm[n][flightEndIndex2]-pathLatitudeArrayKm[n][flightEndIndex2-1])/(ch4Array[n][spikeEndIndexList[j]-k]-ch4Array[n][spikeEndIndexList[j]-k-1])
+                                    spikeEndLonKm=pathLongitudeArrayKm[n][flightEndIndex2-1]+(ch4Array[n][spikeStartIndexList[j]]-ch4Array[n][spikeEndIndexList[j]-k-1])*(pathLongitudeArrayKm[n][flightEndIndex2]-pathLongitudeArrayKm[n][flightEndIndex2-1])/(ch4Array[n][spikeEndIndexList[j]-k]-ch4Array[n][spikeEndIndexList[j]-k-1])
+                                    spikeEndAlt=pathAltitudeArray[n][flightEndIndex2-1]+(ch4Array[n][spikeStartIndexList[j]]-ch4Array[n][spikeEndIndexList[j]-k-1])*(pathAltitudeArray[n][flightEndIndex2]-pathAltitudeArray[n][flightEndIndex2-1])/(ch4Array[n][spikeEndIndexList[j]-k]-ch4Array[n][spikeEndIndexList[j]-k-1])
+                                    
+                                elif ch4Array[n][spikeStartIndexList[j]]<ch4Array[n][spikeEndIndexList[j]]:
+                                    
+                                    spikeBottomindex=spikeEndIndexList[j]
+                                    
+                                    l=0
+                                    while ch4Array[n][spikeStartIndexList[j]+l]<ch4Array[n][spikeEndIndexList[j]]:
+                                        l+=1
+                                    k=l-1
+                    
+                                    
+                                    spikeStartIndexList[j]=spikeStartIndexList[j]+k
+                                    
+                                    
+                                    inf2=self.numpy.where(flightTimeArray[n]<=ch4TimeArray[n][spikeStartIndexList[j]])[0]
+                                    
+                                    if len(inf2)>0:
+                                        flightStartIndex2=inf2[-1]
+                                    else:
+                                        flightStartIndex2=0
+                                
+                                
+                                    sup2=self.numpy.where(flightTimeArray[n]>=ch4TimeArray[n][spikeEndIndexList[j]])[0]
+                                    
+                                    if len(sup2)>0:
+                                        flightEndIndex2=sup2[0]
+                                    else:
+                                        flightEndIndex2=len(flightTimeArray[n])-1
+                                    
+                                    spikeEndLatKm=pathLatitudeArrayKm[n][flightEndIndex]
+                                    spikeEndLonKm=pathLongitudeArrayKm[n][flightEndIndex]
+                                    spikeEndAlt=pathAltitudeArray[n][flightEndIndex]
+                                    
+                                    spikeStartLatKm=pathLatitudeArrayKm[n][flightStartIndex2]+(ch4Array[n][spikeEndIndexList[j]]-ch4Array[n][spikeStartIndexList[j]+k])*(pathLatitudeArrayKm[n][flightStartIndex2+1]-pathLatitudeArrayKm[n][flightStartIndex2])/(ch4Array[n][spikeStartIndexList[j]+k+1]-ch4Array[n][spikeStartIndexList[j]+k])
+                                    spikeStartLonKm=pathLongitudeArrayKm[n][flightStartIndex2]+(ch4Array[n][spikeEndIndexList[j]]-ch4Array[n][spikeStartIndexList[j]+k])*(pathLongitudeArrayKm[n][flightStartIndex2+1]-pathLongitudeArrayKm[n][flightStartIndex2])/(ch4Array[n][spikeStartIndexList[j]+k+1]-ch4Array[n][spikeStartIndexList[j]+k])
+                                    spikeStartAlt=pathAltitudeArray[n][flightStartIndex2]+(ch4Array[n][spikeEndIndexList[j]]-ch4Array[n][spikeStartIndexList[j]+k])*(pathAltitudeArray[n][flightStartIndex2+1]-pathAltitudeArray[n][flightStartIndex2])/(ch4Array[n][spikeStartIndexList[j]+k+1]-ch4Array[n][spikeStartIndexList[j]+k])
+                                       
+                                       
+                                       
+                                       
+                                else:
+                                    spikeBottomindex=spikeStartIndexList[j]
+                                    
+                                    k=0
+                                    
+                                    inf2=self.numpy.where(flightTimeArray[n]<=ch4TimeArray[n][spikeStartIndexList[j]])[0]
+                                    
+                                    if len(inf2)>0:
+                                        flightStartIndex2=inf2[-1]
+                                    else:
+                                        flightStartIndex2=0
+                                
+                                
+                                    sup2=self.numpy.where(flightTimeArray[n]>=ch4TimeArray[n][spikeEndIndexList[j]])[0]
+                                    
+                                    if len(sup2)>0:
+                                        flightEndIndex2=sup2[0]
+                                    else:
+                                        flightEndIndex2=len(flightTimeArray[n])-1
+                                    
+                                    spikeEndLatKm=pathLatitudeArrayKm[n][flightEndIndex]
+                                    spikeEndLonKm=pathLongitudeArrayKm[n][flightEndIndex]
+                                    spikeEndAlt=pathAltitudeArray[n][flightEndIndex]
+                                    
+                                    spikeStartLatKm=pathLatitudeArrayKm[n][flightStartIndex]+(ch4Array[n][spikeEndIndexList[j]]-ch4Array[n][spikeStartIndexList[j]+k])*(pathLatitudeArrayKm[n][flightStartIndex+1]-pathLatitudeArrayKm[n][flightStartIndex])/(ch4Array[n][spikeStartIndexList[j]+k+1]-ch4Array[n][spikeStartIndexList[j]+k])
+                                    spikeStartLonKm=pathLongitudeArrayKm[n][flightStartIndex]+(ch4Array[n][spikeEndIndexList[j]]-ch4Array[n][spikeStartIndexList[j]+k])*(pathLongitudeArrayKm[n][flightStartIndex+1]-pathLongitudeArrayKm[n][flightStartIndex])/(ch4Array[n][spikeStartIndexList[j]+k+1]-ch4Array[n][spikeStartIndexList[j]+k])
+                                    spikeStartAlt=pathAltitudeArray[n][flightStartIndex]+(ch4Array[n][spikeEndIndexList[j]]-ch4Array[n][spikeStartIndexList[j]+k])*(pathAltitudeArray[n][flightStartIndex+1]-pathAltitudeArray[n][flightStartIndex])/(ch4Array[n][spikeStartIndexList[j]+k+1]-ch4Array[n][spikeStartIndexList[j]+k])
+                                       
+                                    
+                                ''' END ''' 
+                                
+                                
+                                spikeWidth=self.numpy.sqrt((1000*spikeEndLonKm-1000*spikeStartLonKm)**2+(1000*spikeEndLatKm-1000*spikeStartLatKm)**2+(spikeEndAlt-spikeStartAlt)**2)
+                                
+                                spikeCH4Background2=[]
+                                spikeCH4Background2=self.numpy.interp(flightTimeArray[n][flightStartIndex2:flightEndIndex2],ch4TimeArray[n],ch4MovingMedianArray[n])
+                                if  flightStartIndex2+1==flightEndIndex2:
+                                    spikeCH4Background2=self.numpy.hstack((spikeCH4Background2,self.numpy.array([ch4MovingMedianArray[n][spikeEndIndexList[j]]])))
+                                    
+                                
+                                #spikeCH4BottomLimit=self.scipy.stats.nanmean([ch4Array[n][spikeStartIndexList[j]],ch4Array[n][spikeEndIndexList[j]]])-self.scipy.stats.nanmean(spikeCH4Background)
+                                
+                                spikeEquivalentHeight=spikeMaxCH4-self.scipy.stats.nanmean(spikeCH4Background2)
+                                spikeCH4BottomLimit=ch4Array[n][spikeBottomindex]-self.scipy.stats.nanmean(spikeCH4Background2)    
+                                
+                                
+            
+                                if spikeEquivalentHeight>0 and spikeCH4BottomLimit>=0 and spikeEquivalentHeight>spikeCH4BottomLimit:
+                                    spikeSigma=spikeWidth/(2*self.math.sqrt(2*self.math.log(spikeEquivalentHeight/spikeCH4BottomLimit))) 
+                                
+                                else:
+                                    spikeSigma=float('NaN')
+                                    print 'WARNING! SPIKE SIGMA COMPUTATION ERROR FOR SPIKE#'+str(spikesCount)+' FLIGHT#'+str(n)
+                                    print 'SPIKE EQUIVALENT HEIGHT: '+str(spikeEquivalentHeight)
+                                    print 'SPIKE CH4 BOTTOM LIMIT: '+str(spikeCH4BottomLimit)
+                                    print spikeCH4Background2
+                                    print flightStartIndex2
+                                    print flightEndIndex2
+                                    
+                                    print '\n'
+                                    
+                                
+                                
+                                if spikeWidth>0 and spikeMaxCH4<50 and spikeEndIndexList[j]-spikeStartIndexList[j]>3 and (spikeEquivalentHeight-spikeCH4BottomLimit)>minSpikeHeight:
+                                    spikesCount+=1
+                                
+                                    spikesData.append([spikeStartIndexList[j],spikeEndIndexList[j],spikeMaxCH4Index,spikeMaxCH4,spikeWidth,spikeHeading,spikeEquivalentHeight,spikeIntegratedEquivalentHeight,len(spikesData),spikeArea,spikeCH4BottomLimit,spikeSigma])
+                                    
+                            
+                    nextSpikesIndices=self.numpy.where(spikesIndices>spikeEndIndex)[0] #Indices (of spikesIndices list) of next spike to be processed
+                    
+                    if len(nextSpikesIndices)>0:
+                        i=nextSpikesIndices[0]  #Index (of spikesIndices list) of next spike to be processed
+                    else:
+                        break
+    
+                if len(spikesData)>0:
+                    
+#                    print '  '+str(len(spikesData))+' Spikes Detected for data file #'+str(n+1)+'\n'
+#                    
+#                    print '[Starting Index, Ending Index, Max [CH4] Index, Max [CH4] Value (ppm), Width (m), Plane Heading (deg VECT), Mean Height (ppmv), Mean Equivalent Height (ppmv), Spike Number,Spike Area, Spike CH4 Threshold, Spike Sigma]'+'\n'
+#                    
+#                    print str(spikesData) +'\n'
+    
+                    spikesDataArray.append(spikesData)
+    
+                else:
+    
+                    print 'NO SIGNIFICANT SPIKE DETECTED for data file #'+str(n+1)+'\n'
+                    spikesDataArray.append([])
+                
+            else:
+    
+                print 'NO SPIKES DETECTED for data file #'+str(n+1)+'\n'
+                spikesDataArray.append([])
+                
+        return(spikesDataArray)    
+        
+    def computeSpikes4(self,ch4ThresholdList,stdDevFactorList,minSpikeHeight,ch4TimeArray,ch4Array,ch4MovingMedianArray,ch4StandardDeviationArray,flightTimeArray,pathLatitudeArrayKm,pathLongitudeArrayKm,pathAltitudeArray):
+        
+        spikesDataArray=[] #Array that will contain all the spikes information
+        
+        
+        for n in range(0,len(ch4Array)):
+            
+            
+            spikesMinJumpList=[]
+            spikesIndices=[]
+            
+            lowsIndices=[]
+            spikesData=[] #List that will be apended to spikesDataArray, it contains all sthe spikes information for each flight
+    
+            spikesMinJumpList=self.numpy.maximum(ch4StandardDeviationArray[n]*stdDevFactorList[n],ch4ThresholdList[n]) #Minimum jump from mean [CH4] to spot a spike
+            
+            spikesIndices = self.numpy.where(ch4Array[n] >= ch4MovingMedianArray[n] + spikesMinJumpList)[0] #Indices of ch4 list that are spotted as being part of "spikes" intervals of ch4
+            lowsIndices = self.numpy.where(ch4Array[n] <ch4MovingMedianArray[n] + spikesMinJumpList)[0]         #Indices of ch4 list that are spotted as being part of "lows" intervals of ch4 (everything that's not part of a spike)
+            
+            spikesMinJumpList=None
+                                                                                                   
+            spikesClusterNb=0
+            spikesCount=0
+            
+            
+    
+            if len(spikesIndices)>0:
+                
+                i=0 #Index (of spikeIndices list) that will be incemented in order to process values of spikeIndices
+                
+                while True:
+
+                    '''IN THE FOLLOWING WE DEFINE START AND END INDICES OF THE CURRENt SPIKE'''
+                    try:
+                        array=self.numpy.where(lowsIndices<spikesIndices[i])[0]
+                        spikeStartIndex=lowsIndices[array[-1]]
+                        array=None
+                    except:
+                        spikeStartIndex=0
+                    try:   
+                        array=self.numpy.where(lowsIndices>spikeStartIndex)[0]
+                        spikeEndIndex=lowsIndices[array[0]]
+                        array=None
+                        #Index (of lowIndices list) of first element of lowIndices following the currently processed spike
+                    except:
+                        spikeEndIndex=spikesIndices[-1]
+                    
+                    spikesClusterEndIndex=spikeEndIndex
+                        
+                    '''END'''   
+#                    print 'SIZES OF spikeStartIndex AND spikeEndIndex:'
+#                    print self.sys.getsizeof(spikeStartIndex)
+#                    print self.sys.getsizeof(spikeEndIndex)
+                    
+                    if spikeEndIndex-spikeStartIndex>=2:
+                        
+                        spikesClusterNb+=1
+                        
+                        print '\nPROCESSING SPIKES CLUSTER # '+str(spikesClusterNb)+':'
+                        
+                        '''IN THE FOLLOWING WE AJUST CURRENt SPIKE'S LEGS SO THAT IT STARTS WITH INCREASING AND ENDS WITH DECREASING CONCENTRATION WHILE bEINg AS LONG AS POSSIBLE'''
+                        
+                        climbStart=False
+                        while climbStart==False and spikeEndIndex-spikeStartIndex>=2:
+                            
+                            CH4DiffStart=(ch4Array[n][spikeStartIndex+1]-ch4Array[n][spikeStartIndex])/(ch4TimeArray[n][spikeStartIndex+1]-ch4TimeArray[n][spikeStartIndex])
+                            
+                            if CH4DiffStart>0 and spikeStartIndex-1>0:
+                                
+                                CH4DiffBefore=(ch4Array[n][spikeStartIndex]-ch4Array[n][spikeStartIndex-1])/(ch4TimeArray[n][spikeStartIndex]-ch4TimeArray[n][spikeStartIndex-1])
+                            
+                                if CH4DiffBefore>0:
+                                    spikeStartIndex-=1
+                                    
+                                else:
+                                    climbStart=True
+                                    
+                            elif CH4DiffStart<=0 and spikeStartIndex+1<len(ch4Array[n]):
+                                spikeStartIndex+=1
+                                
+                            else:
+                                climbStart=True
+                        
+                        CH4DiffStart=None
+                        CH4DiffBefore=None
+                        
+                        
+                        climbEnd=False
+                        while climbEnd==False and spikeEndIndex-spikeStartIndex>=2:
+                            
+                            CH4DiffEnd=(ch4Array[n][spikeEndIndex]-ch4Array[n][spikeEndIndex-1])/(ch4TimeArray[n][spikeEndIndex]-ch4TimeArray[n][spikeEndIndex-1])
+                            
+                            if CH4DiffEnd<0 and spikeEndIndex+1<len(ch4Array[n]):
+                                
+                                CH4DiffAfter=(ch4Array[n][spikeEndIndex+1]-ch4Array[n][spikeEndIndex])/(ch4TimeArray[n][spikeEndIndex+1]-ch4TimeArray[n][spikeEndIndex])
+                            
+                                if CH4DiffAfter<0:
+                                    spikeEndIndex+=1
+                                    
+                                else:
+                                    climbEnd=True
+                                    
+                            elif CH4DiffEnd>=0 and spikeEndIndex-1>=0:
+                                spikeEndIndex-=1   
+                                
+                            else:
+                                climbEnd=True
+                                
+                        CH4DiffEnd=None
+                        CH4DiffAfter=None
+                        '''END'''
+                        
+                        if spikeEndIndex-spikeStartIndex>=2:
+                            
+                            '''IN THE FOLLOWING WE GET MAXIMA AND MINIMA OF THE CURRENT SPIKE'''
+                            spikeMaxima=[]
+                            spikeMaximaIndex=[]
+                            
+                            spikeMinimaIndex=[]
+                            
+                            for k in range(spikeStartIndex,spikeEndIndex-1):
+                                
+                                spikeCH4Diff=(ch4Array[n][k+1]-ch4Array[n][k])/(ch4TimeArray[n][k+1]-ch4TimeArray[n][k])
+                                spikeCH4DiffNext=(ch4Array[n][k+2]-ch4Array[n][k+1])/(ch4TimeArray[n][k+2]-ch4TimeArray[n][k+1])
+                                
+                                if spikeCH4Diff>0 and spikeCH4DiffNext<=0:
+                                    spikeMaxima.append(ch4Array[n][k+1])
+                                    spikeMaximaIndex.append(k+1)
+                                    
+                                elif spikeCH4Diff<0 and spikeCH4DiffNext>=0:
+                                    
+                                    spikeMinimaIndex.append(k+1)
+                            '''END'''
+                            spikeCH4Diff=None
+                            spikeCH4DiffNext=None
+                                    
+                            spikeStartIndexList=[]
+                            spikeEndIndexList=[]
+                            spikeBottomIndexList=[]
+                            spikeMaximaIndexList=[]
+                            spikeMaximaList=[]
+                            
+                            for j in range(0,len(spikeMaxima)):
+                                spikeStartIndex2=0
+                                spikeEndIndex2=0
+                                #if spikeMaxima[j]>ch4MovingMedianArray[n][spikeMaximaIndex[j]]+spikesMinJumpList[spikeMaximaIndex[j]]:
+                                    
+                                spikeMaximaIndexList.append(spikeMaximaIndex[j])
+                                spikeMaximaList.append(spikeMaxima[j])
+                                
+                                '''In the following we split the current spike into several sub-spikes that have only one local maximum''' 
+                                
+                                try:
+                                    array=self.numpy.where(self.numpy.ndarray(spikeMinimaIndex)<spikeMaximaIndex[j])
+                                    spikeStartIndex2=spikeMinimaIndex[array[0][-1]]
+                                    array=None
+                                except:
+                                    spikeStartIndex2=spikeStartIndex
+                                
+                                try:
+                                    array=self.numpy.where(self.numpy.ndarray(spikeMinimaIndex)>spikeMaximaIndex[j])
+                                    spikeEndIndex2=spikeMinimaIndex[array[0][0]]
+                                    array=None
+                                except:
+                                    spikeEndIndex2=spikeEndIndex
+                                
+                                '''END'''
+                                
+                                '''THEN WE CUT THEIR LEGS SO THAT THEIR START AND END POINTS ARE APPROXIMATELY AT THE SAME HEIGHT'''
+                                
+                                if ch4Array[n][spikeStartIndex2]>=ch4Array[n][spikeEndIndex2]:
+
+                                    spikeBottomIndexList.append(spikeStartIndex2)                                        
+                                    
+                                    l=0
+                                    while ch4Array[n][spikeStartIndex2]>ch4Array[n][spikeEndIndex2-l]:
+                                        l+=1
+                                    k=l-1
+                                    
+                                    spikeEndIndex2-=k
+                                    
+                                elif ch4Array[n][spikeStartIndex2]<ch4Array[n][spikeEndIndex2]:
+
+                                    spikeBottomIndexList.append(spikeEndIndex2)                                        
+                                    
+                                    l=0
+                                    while ch4Array[n][spikeStartIndex2+l]<ch4Array[n][spikeEndIndex2]:
+                                        l+=1
+                                    k=l-1
+                                    
+                                    spikeStartIndex2+=k
+                                '''END'''    
+                                
+                                
+                                '''THEN EVERY SUB-SPIKES ARE SAVED INTO THE FOLLOWING LISTS'''
+                                spikeStartIndexList.append(spikeStartIndex2)
+                                spikeEndIndexList.append(spikeEndIndex2)
+                                '''END'''   
+                            print '     # SPIKES IN CURRENT CLUSTER = '+str(len(spikeStartIndexList))
+                            
+                            
+                            '''NOW WE PROCESS SUB-SPIKES ONE BY ONE'''
+                            
+                            for j in range(0,len(spikeStartIndexList)):    
+                                
+                                print '     PROCESSING SPIKE # '+str(j+1)+' / '+str(len(spikeStartIndexList))
+                                
+                                if spikeEndIndexList[j]-spikeStartIndexList[j]>=2:
+                                    
+                                    '''GET SPIKE MAXIMUM'''                            
+                                    spikeMaxCH4 = spikeMaximaList[j]
+                                    spikeMaxCH4Index = spikeMaximaIndexList[j]                                    
+                                    '''END'''
+                                     
+                                    infTimeIndices=self.numpy.where(flightTimeArray[n]<=ch4TimeArray[n][spikeStartIndexList[j]])[0]
+                                    
+                                    if len(infTimeIndices)>0:
+                                        flightStartIndex=infTimeIndices[-1]
+                                        lInf=len(infTimeIndices)
+                                        infTimeIndices=None
+                                    else:
+                                        flightStartIndex=0
+                                        lInf=len(infTimeIndices)
+                                        infTimeIndices=None
+                                    
+                                    supTimeIndices=self.numpy.where(flightTimeArray[n]>=ch4TimeArray[n][spikeEndIndexList[j]])[0]
+                                        
+                                    if len(supTimeIndices)>0:
+                                        flightEndIndex=supTimeIndices[0]
+                                        lSup=len(supTimeIndices)
+                                        supTimeIndices=None
+                                    else:
+                                        flightEndIndex=len(flightTimeArray[n])-1
+                                        lSup=len(supTimeIndices)
+                                        supTimeIndices=None
+                                        
+                                    if lInf==0 and lSup==0:
+                                        print '     SPIKE PROCESSING ABORTED (2)'
+                                        
+                                                                                
+                                    else:
+                                        
+                                        '''COMPUTE SPIKE HEADING'''
+                                        spikeLonExtent=1000*(pathLongitudeArrayKm[n][flightEndIndex]-pathLongitudeArrayKm[n][flightStartIndex])
+                                        spikeLatExtent=1000*(pathLatitudeArrayKm[n][flightEndIndex]-pathLatitudeArrayKm[n][flightStartIndex])
+                                        
+                                        
+                                        spikeHeading=0
+                                        if  spikeLonExtent>=0:
+                                            spikeHeading=self.numpy.arccos(spikeLatExtent/self.numpy.sqrt(spikeLonExtent**2+spikeLatExtent**2))*180/3.14
+                                 
+                                        elif  spikeLonExtent<0:
+                                            spikeHeading=360-self.numpy.arccos(spikeLatExtent/self.numpy.sqrt(spikeLonExtent**2+spikeLatExtent**2))*180/3.14
+                                        else:
+                                            spikeHeading=float('NaN')
+                                        
+                                        spikeLonExtent=None
+                                        spikeLatExtent=None
+                                        
+                                        '''END'''
+                                        
+                                        '''COMPUTE SPIKE WIDTH'''
+                                        
+                                        '''In the following we interpolate the time,latitude,longitude and altitude values (end and start) of the spike
+                                        so that its starting end ending points are at the same [CH4] for width calculation purposes'''
+                                       
+                                        if ch4Array[n][spikeStartIndexList[j]]<ch4Array[n][spikeEndIndexList[j]] and flightStartIndex+1<len(pathLatitudeArrayKm[n]):
+                                            
+                                            spikeEndLatKm=pathLatitudeArrayKm[n][flightEndIndex]
+                                            spikeEndLonKm=pathLongitudeArrayKm[n][flightEndIndex]
+                                            spikeEndAlt=pathAltitudeArray[n][flightEndIndex]
+                                            
+                                            C1=ch4Array[n][spikeStartIndexList[j]]
+                                            C2=ch4Array[n][spikeStartIndexList[j]+1]
+                                            C3=ch4Array[n][spikeEndIndexList[j]]
+                                            
+                                            X1=pathLatitudeArrayKm[n][flightStartIndex]
+                                            X2=pathLatitudeArrayKm[n][flightStartIndex+1]
+                                            
+                                            X3=X1+(C3-C1)*(X2-X1)/(C2-C1)
+                                            
+                                            spikeStartLatKm=X3
+                                            
+                                            X1=pathLongitudeArrayKm[n][flightStartIndex]
+                                            X2=pathLongitudeArrayKm[n][flightStartIndex+1]
+                                            
+                                            X3=X1+(C3-C1)*(X2-X1)/(C2-C1)
+                                            
+                                            spikeStartLonKm=X3
+                                            
+                                            X1=pathAltitudeArray[n][flightStartIndex]
+                                            X2=pathAltitudeArray[n][flightStartIndex+1]
+                                            
+                                            X3=X1+(C3-C1)*(X2-X1)/(C2-C1)
+                                            
+                                            spikeStartAlt=X3
+                                            
+                                            X1=None
+                                            X2=None
+                                            X3=None
+                                            
+                                            C1=None
+                                            C2=None
+                                            C3=None
+                                            
+                                            spikeWidth=self.numpy.sqrt((1000*spikeEndLonKm-1000*spikeStartLonKm)**2+(1000*spikeEndLatKm-1000*spikeStartLatKm)**2+(spikeEndAlt-spikeStartAlt)**2)
+                                            
+                                            spikeStartLatKm=None
+                                            spikeStartLonKm=None
+                                            spikeStartAlt=None
+                                                
+                                            spikeEndLatKm=None
+                                            spikeEndLonKm=None
+                                            spikeEndAlt=None
+                                            
+                                        elif ch4Array[n][spikeStartIndexList[j]]>=ch4Array[n][spikeEndIndexList[j]]:
+                                            
+                                            spikeStartLatKm=pathLatitudeArrayKm[n][flightStartIndex]
+                                            spikeStartLonKm=pathLongitudeArrayKm[n][flightStartIndex]
+                                            spikeStartAlt=pathAltitudeArray[n][flightStartIndex]
+                                            
+                                            C1=ch4Array[n][spikeEndIndexList[j]-1]
+                                            C2=ch4Array[n][spikeEndIndexList[j]]
+                                            C3=ch4Array[n][spikeStartIndexList[j]]
+                                            
+                                            X1=pathLatitudeArrayKm[n][flightEndIndex-1]
+                                            X2=pathLatitudeArrayKm[n][flightEndIndex]
+                                            
+                                            X3=X1+(C3-C1)*(X2-X1)/(C2-C1)
+                                            
+                                            spikeEndLatKm=X3
+                                            
+                                            X1=pathLongitudeArrayKm[n][flightEndIndex-1]
+                                            X2=pathLongitudeArrayKm[n][flightEndIndex]
+                                            
+                                            X3=X1+(C3-C1)*(X2-X1)/(C2-C1)
+                                            
+                                            spikeEndLonKm=X3
+                                            
+                                            X1=pathAltitudeArray[n][flightEndIndex-1]
+                                            X2=pathAltitudeArray[n][flightEndIndex]
+                                            
+                                            X3=X1+(C3-C1)*(X2-X1)/(C2-C1)
+                                            
+                                            spikeEndAlt=X3
+                                            
+                                            X1=None
+                                            X2=None
+                                            X3=None
+                                            
+                                            C1=None
+                                            C2=None
+                                            C3=None
+                                            
+                                        
+                                            spikeWidth=self.numpy.sqrt((1000*spikeEndLonKm-1000*spikeStartLonKm)**2+(1000*spikeEndLatKm-1000*spikeStartLatKm)**2+(spikeEndAlt-spikeStartAlt)**2)
+                                            
+                                            spikeStartLatKm=None
+                                            spikeStartLonKm=None
+                                            spikeStartAlt=None
+                                                
+                                            spikeEndLatKm=None
+                                            spikeEndLonKm=None
+                                            spikeEndAlt=None
+                                        
+                                        
+                                        else:
+                                            
+                                            spikeWidth=None
+                                            
+                                        
+                                        
+                                        '''END'''
+                                        
+                                        '''DEFINE SPIKE CH4 BACKGROUND (=MOVING MEDIAN)'''
+                                        spikeCH4Background=[]
+                                        spikeCH4Background=self.numpy.interp(flightTimeArray[n][flightStartIndex:flightEndIndex],ch4TimeArray[n],ch4MovingMedianArray[n])
+                                        if  flightStartIndex+1==flightEndIndex:
+                                            spikeCH4Background=self.numpy.hstack((spikeCH4Background,self.numpy.array([ch4MovingMedianArray[n][spikeEndIndexList[j]]])))
+                                        
+                                        flightStartIndex=None
+                                        flightEndIndex=None
+                                        '''END'''  
+                                        
+
+                                        
+                                        #spikeCH4BottomLimit=self.scipy.stats.nanmean([ch4Array[n][spikeStartIndexList[j]],ch4Array[n][spikeEndIndexList[j]]])-self.scipy.stats.nanmean(spikeCH4Background)
+                                        '''COMPUTE SPIKE EQUIVALENT AND BOTTOM HEIGHTS'''
+                                        spikeEquivalentHeight=spikeMaxCH4-self.scipy.stats.nanmean(spikeCH4Background)
+                                        spikeCH4BottomHeight=ch4Array[n][spikeBottomIndexList[j]]-self.scipy.stats.nanmean(spikeCH4Background)    
+                                        '''END'''
+                                        spikeCH4Background=None
+                                        
+                                        '''COMPUTE SPIKE SIGMA'''
+                                        if spikeWidth!=None and spikeEquivalentHeight>0 and spikeCH4BottomHeight>=0 and spikeEquivalentHeight>spikeCH4BottomHeight:
+                                            spikeSigma=spikeWidth/(2*self.math.sqrt(2*self.math.log(spikeEquivalentHeight/spikeCH4BottomHeight))) 
+                                        
+                                        else:
+                                            spikeSigma=float('NaN')
+                                            #print 'WARNING! SPIKE SIGMA COMPUTATION ERROR FOR SPIKE#'+str(spikesCount)+' FLIGHT#'+str(n)+'\n'
+                                        
+                                        
+                                        
+                                        '''END'''     
+                                            
+                                        
+                                        
+                                        if spikeWidth!=None and spikeMaxCH4<50 and spikeEndIndexList[j]-spikeStartIndexList[j]>=2 and (spikeEquivalentHeight-spikeCH4BottomHeight)>minSpikeHeight:
+                                            spikesCount+=1
+                                            spikesData.append([spikeStartIndexList[j],spikeEndIndexList[j],spikeMaxCH4Index,spikeMaxCH4,999,spikeHeading,999,spikeEquivalentHeight,len(spikesData),999,spikeCH4BottomHeight,spikeSigma])
+                                            #print 'SPIKE # '+str(spikesCount)
+                                            #print 'spikesData VARIABLE SIZE (BYTES) = '+str(self.sys.getsizeof(spikesData))+'\n'
+                                        else:
+                                            print "     SPIKE PROCESSING ABORTED (3)"
+                                            
+                                        spikeWidth=None
+                                        spikeCH4BottomHeight=None
+                                        spikeEquivalentHeight=None
+                                        spikeMaxCH4Index=None
+                                        spikeMaxCH4=None
+                                        spikeHeading=None
+                                        spikeSigma=None
+                                        
+                                else:
+                                    print "     SPIKE PROCESSING ABORTED (1)"
+                                    
+                            spikeStartIndexList=None
+                            spikeEndIndexList=None
+                        
+                        else:
+                            print "SPIKES CLUSTER PROCESSING ABORTED (2)\n"
+                            spikesClusterEndIndex+=1
+                    
+                    else:
+                        print "SPIKES CLUSTER PROCESSING ABORTED (1)\n"
+                        spikesClusterEndIndex+=1
+                    
+                    nextSpikesIndices=self.numpy.where(spikesIndices>spikesClusterEndIndex)[0] #Indices (of spikesIndices list) of next spike to be processed
+                    
+                    
+                    if len(nextSpikesIndices)>0:
+                        i=nextSpikesIndices[0]  #Index (of spikesIndices list) of next spike to be processed
+                        #print "NEXT SPIKE INDEX = "+str(i)
+                        nextSpikesIndices=None
+                    else:
+                        nextSpikesIndices=None
+                        break
+    
+                if len(spikesData)>0:
+                    
+                    print '  '+str(len(spikesData))+' SPIKES DETECTED FOR DATA FILE #'+str(n+1)+'\n'
+#                    
+#                    print '[Starting Index, Ending Index, Max [CH4] Index, Max [CH4] Value (ppm), Width (m), Plane Heading (deg VECT), Mean Height (ppmv), Mean Equivalent Height (ppmv), Spike Number,Spike Area, Spike CH4 Threshold, Spike Sigma]'+'\n'
+#                    
+#                    print str(spikesData) +'\n'
+    
+                    spikesDataArray.append(spikesData)
+    
+                else:
+    
+                    print 'NO SPIKE DETECTED (2) for data file #'+str(n+1)+'\n'
+                    spikesDataArray.append([])
+                
+            else:
+    
+                print 'NO SPIKES DETECTED (1) for data file #'+str(n+1)+'\n'
+                spikesDataArray.append([])
+                
+        return(spikesDataArray)     
+        
+        
+    def computeSpikes5(self,ch4ThresholdList,stdDevFactorList,minSpikeHeight,ch4TimeArray,ch4Array,ch4MovingMedianArray,ch4StandardDeviationArray,flightTimeArray,pathLatitudeArrayKm,pathLongitudeArrayKm,pathAltitudeArray):
+        
+        spikesDataArray=[] #Array that will contain all the spikes information
+        
+        
+        for n in range(0,len(ch4Array)):
+            
+            
+            spikesMinJumpList=[]
+            spikesIndices=[]
+            
+            lowsIndices=[]
+            spikesData=[] #List that will be apended to spikesDataArray, it contains all sthe spikes information for each flight
+    
+            spikesMinJumpList=self.numpy.maximum(ch4StandardDeviationArray[n]*stdDevFactorList[n],ch4ThresholdList[n]) #Minimum jump from mean [CH4] to spot a spike
+            
+            spikesIndices = self.numpy.where(ch4Array[n] >= ch4MovingMedianArray[n] + spikesMinJumpList)[0] #Indices of ch4 list that are spotted as being part of "spikes" intervals of ch4
+            lowsIndices = self.numpy.where(ch4Array[n] <ch4MovingMedianArray[n] + spikesMinJumpList)[0]         #Indices of ch4 list that are spotted as being part of "lows" intervals of ch4 (everything that's not part of a spike)
+            
+            spikesMinJumpList=None
+            
+            spikesCount=0
+            
+            
+    
+            if len(spikesIndices)>0:
+                
+                spikeStartIndexList=[]
+                spikeEndIndexList=[]
+                
+                i=0 #Index (of spikeIndices list) that will be incemented in order to process values of spikeIndices
+                
+                while True:
+
+                    '''IN THE FOLLOWING WE DEFINE START AND END INDICES OF THE CURRENt SPIKE'''
+                    try:
+                        array=self.numpy.where(lowsIndices<spikesIndices[i])[0]
+                        spikeStartIndex=lowsIndices[array[-1]]
+                        array=None
+                    except:
+                        spikeStartIndex=0
+                    try:   
+                        array=self.numpy.where(lowsIndices>spikeStartIndex)[0]
+                        spikeEndIndex=lowsIndices[array[0]]
+                        array=None
+                        #Index (of lowIndices list) of first element of lowIndices following the currently processed spike
+                    except:
+                        spikeEndIndex=spikesIndices[-1]
+                    '''END'''   
+                    
+                    
+                    '''THEN EVERY SUB-SPIKES ARE SAVED INTO THE FOLLOWING LISTS'''
+                    spikeStartIndexList.append(spikeStartIndex)
+                    spikeEndIndexList.append(spikeEndIndex)
+                    '''END''' 
+                             
+                    '''WE SET NEXT SPIKE INDEX TO BE PROCESSED'''
+                    nextSpikesIndices=self.numpy.where(spikesIndices>spikeEndIndexList[-1])[0] #Indices (of spikesIndices list) of next spike to be processed
+                    
+                    
+                    if len(nextSpikesIndices)>0:
+                        i=nextSpikesIndices[0]  #Index (of spikesIndices list) of next spike to be processed
+                        #print "NEXT SPIKE INDEX = "+str(i)
+                        nextSpikesIndices=None
+                    else:
+                        nextSpikesIndices=None
+                        break
+                    
+                    '''DONE'''
+                    
+                spikeStartIndexList2=[]
+                spikeEndIndexList2=[]    
+                    
+                for j in range(0,len(spikeStartIndexList)):
+                    
+                    newStartIndex=spikeStartIndexList[j]
+                    
+                    while ch4Array[n][newStartIndex]>=ch4MovingMedianArray[n][newStartIndex]:
+                        newStartIndex-=1
+                        
+                    spikeStartIndexList2.append(newStartIndex)
+                    
+                    newEndIndex=spikeEndIndexList[j]
+                    
+                    while ch4Array[n][newEndIndex]>=ch4MovingMedianArray[n][newEndIndex]:
+                        newEndIndex+=1
+                        
+                    spikeEndIndexList2.append(newEndIndex)
+                    
+                
+                
+                spikeStartIndexList3=[]
+                spikeEndIndexList3=[]    
+                spikeMeanCoeff=0.9999999999
+                spikeSpanCoeff=0.15
+                j=0
+                endLoop0=False
+                while endLoop0==False:
+#                    print spikeStartIndexList3
+#                    raw_input()
+#                    
+                    spikeStartIndex=spikeStartIndexList2[j]
+                    spikeEndIndex=spikeEndIndexList2[j]
+#                    print spikeStartIndex
+#                    print spikeEndIndex
+#                    raw_input()
+                    
+                    endLoop1=False
+                    while endLoop1==False:
+                       
+                    
+                        spikeMeanCH4=self.numpy.nanmean(ch4Array[n][spikeStartIndex:spikeEndIndex])
+                        
+                        spikeTimeSpan=ch4TimeArray[n][spikeEndIndex]-ch4TimeArray[n][spikeStartIndex]
+                        
+#                        print spikeMeanCH4
+#                        print spikeTimeSpan
+                        
+                        k=0
+                        spikeExtendedBack=False
+                        while (ch4TimeArray[n][spikeStartIndex]-ch4TimeArray[n][spikeStartIndex-k])<=spikeTimeSpan*spikeSpanCoeff and spikeStartIndex-k>0:
+                            
+                            k+=1
+                            
+                            if ch4Array[n][spikeStartIndex-k]>=spikeMeanCH4*spikeMeanCoeff:
+                                
+                                newStartIndex=spikeStartIndex-k
+                                #print '(1)newstart='+newStartIndex
+                                spikeExtendedBack=True
+                                
+                                
+                        if  spikeExtendedBack==True:  
+                            while ch4Array[n][newStartIndex]>=ch4MovingMedianArray[n][newStartIndex]:
+                                newStartIndex-=1
+                                #print '(2)newstart='+newStartIndex    
+                            spikeStartIndex=newStartIndex
+                                
+                        k=0
+                        spikeExtendedFwd=False
+                        while (ch4TimeArray[n][spikeEndIndex+k]-ch4TimeArray[n][spikeEndIndex])<=spikeTimeSpan*spikeSpanCoeff and spikeEndIndex+k<len(ch4Array[n])-1:
+                            
+                            k+=1
+                            
+                            if ch4Array[n][spikeEndIndex+k]>=spikeMeanCH4*spikeMeanCoeff:
+                                
+                                newEndIndex=spikeEndIndex+k
+                                #print '(1)newend='+newEndIndex
+                                spikeExtendedFwd=True
+                                
+                        if  spikeExtendedFwd==True:  
+                            while ch4Array[n][newEndIndex]>=ch4MovingMedianArray[n][newEndIndex] and newEndIndex<len(ch4Array[n])-1:
+                                newEndIndex+=1
+                                #print '(2)newend='+newEndIndex    
+                            spikeEndIndex=newEndIndex
+                            
+                        if spikeExtendedBack==False and spikeExtendedFwd==False:
+#                            print 'endloop 1'
+#                            print spikeStartIndex
+#                            print spikeEndIndex
+#                            print newStartIndex
+#                            print newEndIndex
+#                            raw_input()
+                            endLoop1=True
+                        
+                    
+                    spikeStartIndexList3.append(spikeStartIndex)
+                    spikeEndIndexList3.append(spikeEndIndex)
+                    
+                    
+                    
+                    try:      
+#                        print spikeStartIndexList2
+#                        print spikeStartIndexList3
+#                        print spikeEndIndexList3
+                        j=self.numpy.where(self.numpy.array(spikeStartIndexList2)>=self.numpy.float(spikeEndIndexList3[-1]))[0][0]
+                        
+                    except:
+                        print 'fail'
+                        endLoop0=True
+                        
+                for j in range(0,len(spikeStartIndexList3)):    
+                    spikesCount+=1
+                    spikesData.append([spikeStartIndexList3[j],spikeEndIndexList3[j],999,999,999,999,999,999,len(spikesData),999,999,999])
+                        
+            spikesDataArray.append(spikesData)           
+                     
+        return(spikesDataArray) 
+                    
+                    
+                    
+#                    if spikeEndIndex-spikeStartIndex>=2:
+#                        
+#                        spikesClusterNb+=1
+#                        
+#                        print '\nPROCESSING SPIKES CLUSTER # '+str(spikesClusterNb)+':'
+#                        
+#                        '''IN THE FOLLOWING WE ADJUST CURRENT SPIKE'S LEGS SO THAT IT STARTS WITH INCREASING AND ENDS WITH DECREASING CONCENTRATION WHILE bEINg AS LONG AS POSSIBLE'''
+#                        
+#                        climbStart=False
+#                        while climbStart==False and spikeEndIndex-spikeStartIndex>=2:
+#                            
+#                            CH4DiffStart=(ch4Array[n][spikeStartIndex+1]-ch4Array[n][spikeStartIndex])/(ch4TimeArray[n][spikeStartIndex+1]-ch4TimeArray[n][spikeStartIndex])
+#                            
+#                            if CH4DiffStart>0 and spikeStartIndex-1>0:
+#                                
+#                                CH4DiffBefore=(ch4Array[n][spikeStarttIndex]-ch4Array[n][spikeStartIndex-1])/(ch4TimeArray[n][spikeStartIndex]-ch4TimeArray[n][spikeStartIndex-1])
+#                            
+#                                if CH4DiffBefore>0:
+#                                    spikeStartIndex-=1
+#                                    
+#                                else:
+#                                    climbStart=True
+#                                    
+#                            elif CH4DiffStart<=0 and spikeStartIndex+1<len(ch4Array[n]):
+#                                spikeStartIndex+=1
+#                                
+#                            else:
+#                                climbStart=True
+#                        
+#                        CH4DiffStart=None
+#                        CH4DiffBefore=None
+#                        
+#                        
+#                        climbEnd=False
+#                        while climbEnd==False and spikeEndIndex-spikeStartIndex>=2:
+#                            
+#                            CH4DiffEnd=(ch4Array[n][spikeEndIndex]-ch4Array[n][spikeEndIndex-1])/(ch4TimeArray[n][spikeEndIndex]-ch4TimeArray[n][spikeEndIndex-1])
+#                            
+#                            if CH4DiffEnd<0 and spikeEndIndex+1<len(ch4Array[n]):
+#                                
+#                                CH4DiffAfter=(ch4Array[n][spikeEndIndex+1]-ch4Array[n][spikeEndIndex])/(ch4TimeArray[n][spikeEndIndex+1]-ch4TimeArray[n][spikeEndIndex])
+#                            
+#                                if CH4DiffAfter<0:
+#                                    spikeEndIndex+=1
+#                                    
+#                                else:
+#                                    climbEnd=True
+#                                    
+#                            elif CH4DiffEnd>=0 and spikeEndIndex-1>=0:
+#                                spikeEndIndex-=1   
+#                                
+#                            else:
+#                                climbEnd=True
+#                                
+#                        CH4DiffEnd=None
+#                        CH4DiffAfter=None
+#                        '''END'''
+                        
+#                        if spikeEndIndex-spikeStartIndex>=2:
+#                            
+#                            '''IN THE FOLLOWING WE GET MAXIMA AND MINIMA OF THE CURRENT SPIKE'''
+#                            spikeMaxima=[]
+#                            spikeMaximaIndex=[]
+#                            
+#                            spikeMinimaIndex=[]
+#                            
+#                            for k in range(spikeStartIndex,spikeEndIndex-1):
+#                                
+#                                spikeCH4Diff=(ch4Array[n][k+1]-ch4Array[n][k])/(ch4TimeArray[n][k+1]-ch4TimeArray[n][k])
+#                                spikeCH4DiffNext=(ch4Array[n][k+2]-ch4Array[n][k+1])/(ch4TimeArray[n][k+2]-ch4TimeArray[n][k+1])
+#                                
+#                                if spikeCH4Diff>0 and spikeCH4DiffNext<=0:
+#                                    spikeMaxima.append(ch4Array[n][k+1])
+#                                    spikeMaximaIndex.append(k+1)
+#                                    
+#                                elif spikeCH4Diff<0 and spikeCH4DiffNext>=0:
+#                                    
+#                                    spikeMinimaIndex.append(k+1)
+#                            '''END'''
+#                            spikeCH4Diff=None
+#                            spikeCH4DiffNext=None
+#                                    
+#                            spikeStartIndexList=[]
+#                            spikeEndIndexList=[]
+#                            spikeBottomIndexList=[]
+#                            spikeMaximaIndexList=[]
+#                            spikeMaximaList=[]
+#                            
+#                            for j in range(0,len(spikeMaxima)):
+#                                spikeStartIndex2=0
+#                                spikeEndIndex2=0
+#                                #if spikeMaxima[j]>ch4MovingMedianArray[n][spikeMaximaIndex[j]]+spikesMinJumpList[spikeMaximaIndex[j]]:
+#                                    
+#                                spikeMaximaIndexList.append(spikeMaximaIndex[j])
+#                                spikeMaximaList.append(spikeMaxima[j])
+#                                
+#                                '''In the following we split the current spike into several sub-spikes that have only one local maximum''' 
+#                                
+#                                try:
+#                                    array=self.numpy.where(self.numpy.ndarray(spikeMinimaIndex)<spikeMaximaIndex[j])
+#                                    spikeStartIndex2=spikeMinimaIndex[array[0][-1]]
+#                                    array=None
+#                                except:
+#                                    spikeStartIndex2=spikeStartIndex
+#                                
+#                                try:
+#                                    array=self.numpy.where(self.numpy.ndarray(spikeMinimaIndex)>spikeMaximaIndex[j])
+#                                    spikeEndIndex2=spikeMinimaIndex[array[0][0]]
+#                                    array=None
+#                                except:
+#                                    spikeEndIndex2=spikeEndIndex
+#                                
+#                                '''END'''
+#                                
+#                                '''THEN WE CUT THEIR LEGS SO THAT THEIR START AND END POINTS ARE APPROXIMATELY AT THE SAME HEIGHT'''
+#                                
+#                                if ch4Array[n][spikeStartIndex2]>=ch4Array[n][spikeEndIndex2]:
+#
+#                                    spikeBottomIndexList.append(spikeStartIndex2)                                        
+#                                    
+#                                    l=0
+#                                    while ch4Array[n][spikeStartIndex2]>ch4Array[n][spikeEndIndex2-l]:
+#                                        l+=1
+#                                    k=l-1
+#                                    
+#                                    spikeEndIndex2-=k
+#                                    
+#                                elif ch4Array[n][spikeStartIndex2]<ch4Array[n][spikeEndIndex2]:
+#
+#                                    spikeBottomIndexList.append(spikeEndIndex2)                                        
+#                                    
+#                                    l=0
+#                                    while ch4Array[n][spikeStartIndex2+l]<ch4Array[n][spikeEndIndex2]:
+#                                        l+=1
+#                                    k=l-1
+#                                    
+#                                    spikeStartIndex2+=k
+#                                '''END'''    
+                                
+                                
+#                                '''THEN EVERY SUB-SPIKES ARE SAVED INTO THE FOLLOWING LISTS'''
+#                                spikeStartIndexList.append(spikeStartIndex2)
+#                                spikeEndIndexList.append(spikeEndIndex2)
+#                                '''END'''  
+                                
+                        
+                        
+#                            print '# SPIKES IN CURRENT CLUSTER = '+str(len(spikeStartIndexList))
+                            
+                            
+#                            '''NOW WE PROCESS SUB-SPIKES ONE BY ONE'''
+#                            
+#                            for j in range(0,len(spikeStartIndexList)):    
+#                                
+#                                print '     PROCESSING SPIKE # '+str(j+1)+' / '+str(len(spikeStartIndexList))
+#                                
+#                                if spikeEndIndexList[j]-spikeStartIndexList[j]>=2:
+#                                    
+#                                    '''GET SPIKE MAXIMUM'''                            
+#                                    spikeMaxCH4 = spikeMaximaList[j]
+#                                    spikeMaxCH4Index = spikeMaximaIndexList[j]                                    
+#                                    '''END'''
+#                                     
+#                                    infTimeIndices=self.numpy.where(flightTimeArray[n]<=ch4TimeArray[n][spikeStartIndexList[j]])[0]
+#                                    
+#                                    if len(infTimeIndices)>0:
+#                                        flightStartIndex=infTimeIndices[-1]
+#                                        lInf=len(infTimeIndices)
+#                                        infTimeIndices=None
+#                                    else:
+#                                        flightStartIndex=0
+#                                        lInf=len(infTimeIndices)
+#                                        infTimeIndices=None
+#                                    
+#                                    supTimeIndices=self.numpy.where(flightTimeArray[n]>=ch4TimeArray[n][spikeEndIndexList[j]])[0]
+#                                        
+#                                    if len(supTimeIndices)>0:
+#                                        flightEndIndex=supTimeIndices[0]
+#                                        lSup=len(supTimeIndices)
+#                                        supTimeIndices=None
+#                                    else:
+#                                        flightEndIndex=len(flightTimeArray[n])-1
+#                                        lSup=len(supTimeIndices)
+#                                        supTimeIndices=None
+#                                        
+#                                    if lInf==0 and lSup==0:
+#                                        print 'SPIKE PROCESSING ABORTED (2)'
+#                                        
+#                                                                                
+#                                    else:
+#                                        
+#                                        '''COMPUTE SPIKE HEADING'''
+#                                        spikeLonExtent=1000*(pathLongitudeArrayKm[n][flightEndIndex]-pathLongitudeArrayKm[n][flightStartIndex])
+#                                        spikeLatExtent=1000*(pathLatitudeArrayKm[n][flightEndIndex]-pathLatitudeArrayKm[n][flightStartIndex])
+#                                        
+#                                        
+#                                        spikeHeading=0
+#                                        if  spikeLonExtent>=0:
+#                                            spikeHeading=self.numpy.arccos(spikeLatExtent/self.numpy.sqrt(spikeLonExtent**2+spikeLatExtent**2))*180/3.14
+#                                 
+#                                        elif  spikeLonExtent<0:
+#                                            spikeHeading=360-self.numpy.arccos(spikeLatExtent/self.numpy.sqrt(spikeLonExtent**2+spikeLatExtent**2))*180/3.14
+#                                        else:
+#                                            spikeHeading=float('NaN')
+#                                        
+#                                        spikeLonExtent=None
+#                                        spikeLatExtent=None
+#                                        
+#                                        '''END'''
+#                                        
+#                                        '''COMPUTE SPIKE WIDTH'''
+#                                        
+#                                        '''In the following we interpolate the time,latitude,longitude and altitude values (end and start) of the spike
+#                                        so that its starting end ending points are at the same [CH4] for width calculation purposes'''
+#                                       
+#                                        if ch4Array[n][spikeStartIndexList[j]]<ch4Array[n][spikeEndIndexList[j]] and flightStartIndex+1<len(pathLatitudeArrayKm[n]):
+#                                            
+#                                            spikeEndLatKm=pathLatitudeArrayKm[n][flightEndIndex]
+#                                            spikeEndLonKm=pathLongitudeArrayKm[n][flightEndIndex]
+#                                            spikeEndAlt=pathAltitudeArray[n][flightEndIndex]
+#                                            
+#                                            C1=ch4Array[n][spikeStartIndexList[j]]
+#                                            C2=ch4Array[n][spikeStartIndexList[j]+1]
+#                                            C3=ch4Array[n][spikeEndIndexList[j]]
+#                                            
+#                                            X1=pathLatitudeArrayKm[n][flightStartIndex]
+#                                            X2=pathLatitudeArrayKm[n][flightStartIndex+1]
+#                                            
+#                                            X3=X1+(C3-C1)*(X2-X1)/(C2-C1)
+#                                            
+#                                            spikeStartLatKm=X3
+#                                            
+#                                            X1=pathLongitudeArrayKm[n][flightStartIndex]
+#                                            X2=pathLongitudeArrayKm[n][flightStartIndex+1]
+#                                            
+#                                            X3=X1+(C3-C1)*(X2-X1)/(C2-C1)
+#                                            
+#                                            spikeStartLonKm=X3
+#                                            
+#                                            X1=pathAltitudeArray[n][flightStartIndex]
+#                                            X2=pathAltitudeArray[n][flightStartIndex+1]
+#                                            
+#                                            X3=X1+(C3-C1)*(X2-X1)/(C2-C1)
+#                                            
+#                                            spikeStartAlt=X3
+#                                            
+#                                            X1=None
+#                                            X2=None
+#                                            X3=None
+#                                            
+#                                            C1=None
+#                                            C2=None
+#                                            C3=None
+#                                            
+#                                            spikeWidth=self.numpy.sqrt((1000*spikeEndLonKm-1000*spikeStartLonKm)**2+(1000*spikeEndLatKm-1000*spikeStartLatKm)**2+(spikeEndAlt-spikeStartAlt)**2)
+#                                            
+#                                            spikeStartLatKm=None
+#                                            spikeStartLonKm=None
+#                                            spikeStartAlt=None
+#                                                
+#                                            spikeEndLatKm=None
+#                                            spikeEndLonKm=None
+#                                            spikeEndAlt=None
+#                                            
+#                                        elif ch4Array[n][spikeStartIndexList[j]]>=ch4Array[n][spikeEndIndexList[j]]:
+#                                            
+#                                            spikeStartLatKm=pathLatitudeArrayKm[n][flightStartIndex]
+#                                            spikeStartLonKm=pathLongitudeArrayKm[n][flightStartIndex]
+#                                            spikeStartAlt=pathAltitudeArray[n][flightStartIndex]
+#                                            
+#                                            C1=ch4Array[n][spikeEndIndexList[j]-1]
+#                                            C2=ch4Array[n][spikeEndIndexList[j]]
+#                                            C3=ch4Array[n][spikeStartIndexList[j]]
+#                                            
+#                                            X1=pathLatitudeArrayKm[n][flightEndIndex-1]
+#                                            X2=pathLatitudeArrayKm[n][flightEndIndex]
+#                                            
+#                                            X3=X1+(C3-C1)*(X2-X1)/(C2-C1)
+#                                            
+#                                            spikeEndLatKm=X3
+#                                            
+#                                            X1=pathLongitudeArrayKm[n][flightEndIndex-1]
+#                                            X2=pathLongitudeArrayKm[n][flightEndIndex]
+#                                            
+#                                            X3=X1+(C3-C1)*(X2-X1)/(C2-C1)
+#                                            
+#                                            spikeEndLonKm=X3
+#                                            
+#                                            X1=pathAltitudeArray[n][flightEndIndex-1]
+#                                            X2=pathAltitudeArray[n][flightEndIndex]
+#                                            
+#                                            X3=X1+(C3-C1)*(X2-X1)/(C2-C1)
+#                                            
+#                                            spikeEndAlt=X3
+#                                            
+#                                            X1=None
+#                                            X2=None
+#                                            X3=None
+#                                            
+#                                            C1=None
+#                                            C2=None
+#                                            C3=None
+#                                            
+#                                        
+#                                            spikeWidth=self.numpy.sqrt((1000*spikeEndLonKm-1000*spikeStartLonKm)**2+(1000*spikeEndLatKm-1000*spikeStartLatKm)**2+(spikeEndAlt-spikeStartAlt)**2)
+#                                            
+#                                            spikeStartLatKm=None
+#                                            spikeStartLonKm=None
+#                                            spikeStartAlt=None
+#                                                
+#                                            spikeEndLatKm=None
+#                                            spikeEndLonKm=None
+#                                            spikeEndAlt=None
+#                                        
+#                                        
+#                                        else:
+#                                            
+#                                            spikeWidth=None
+#                                            
+#                                        
+#                                        
+#                                        '''END'''
+#                                        
+#                                        '''DEFINE SPIKE CH4 BACKGROUND (=MOVING MEDIAN)'''
+#                                        spikeCH4Background=[]
+#                                        spikeCH4Background=self.numpy.interp(flightTimeArray[n][flightStartIndex:flightEndIndex],ch4TimeArray[n],ch4MovingMedianArray[n])
+#                                        if  flightStartIndex+1==flightEndIndex:
+#                                            spikeCH4Background=self.numpy.hstack((spikeCH4Background,self.numpy.array([ch4MovingMedianArray[n][spikeEndIndexList[j]]])))
+#                                        
+#                                        flightStartIndex=None
+#                                        flightEndIndex=None
+#                                        '''END'''  
+#                                        
+#
+#                                        
+#                                        #spikeCH4BottomLimit=self.scipy.stats.nanmean([ch4Array[n][spikeStartIndexList[j]],ch4Array[n][spikeEndIndexList[j]]])-self.scipy.stats.nanmean(spikeCH4Background)
+#                                        '''COMPUTE SPIKE EQUIVALENT AND BOTTOM HEIGHTS'''
+#                                        spikeEquivalentHeight=spikeMaxCH4-self.scipy.stats.nanmean(spikeCH4Background)
+#                                        spikeCH4BottomHeight=ch4Array[n][spikeBottomIndexList[j]]-self.scipy.stats.nanmean(spikeCH4Background)    
+#                                        '''END'''
+#                                        spikeCH4Background=None
+#                                        
+#                                        '''COMPUTE SPIKE SIGMA'''
+#                                        if spikeWidth!=None and spikeEquivalentHeight>0 and spikeCH4BottomHeight>=0 and spikeEquivalentHeight>spikeCH4BottomHeight:
+#                                            spikeSigma=spikeWidth/(2*self.math.sqrt(2*self.math.log(spikeEquivalentHeight/spikeCH4BottomHeight))) 
+#                                        
+#                                        else:
+#                                            spikeSigma=float('NaN')
+#                                            #print 'WARNING! SPIKE SIGMA COMPUTATION ERROR FOR SPIKE#'+str(spikesCount)+' FLIGHT#'+str(n)+'\n'
+#                                        
+#                                        
+#                                        
+#                                        '''END'''     
+#                                            
+#                                        
+#                                        
+#                                        if spikeWidth!=None and spikeMaxCH4<50 and spikeEndIndexList[j]-spikeStartIndexList[j]>=2 and (spikeEquivalentHeight-spikeCH4BottomHeight)>minSpikeHeight:
+#                                            spikesCount+=1
+#                                            spikesData.append([spikeStartIndexList[j],spikeEndIndexList[j],spikeMaxCH4Index,spikeMaxCH4,999,spikeHeading,999,spikeEquivalentHeight,len(spikesData),999,spikeCH4BottomHeight,spikeSigma])
+#                                            #print 'SPIKE # '+str(spikesCount)
+#                                            #print 'spikesData VARIABLE SIZE (BYTES) = '+str(self.sys.getsizeof(spikesData))+'\n'
+#                                        else:
+#                                            print "SPIKE PROCESSING ABORTED (3)"
+#                                            
+#                                        spikeWidth=None
+#                                        spikeCH4BottomHeight=None
+#                                        spikeEquivalentHeight=None
+#                                        spikeMaxCH4Index=None
+#                                        spikeMaxCH4=None
+#                                        spikeHeading=None
+#                                        spikeSigma=None
+#                                        
+#                                else:
+#                                    print "SPIKE PROCESSING ABORTED (1)"
+#                                    
+#                            spikeStartIndexList=None
+#                            spikeEndIndexList=None
+#                        
+#                        else:
+#                            print "SPIKES CLUSTER PROCESSING ABORTED (2)\n"
+#                            spikesClusterEndIndex+=1
+#                    
+#                    else:
+#                        print "SPIKES CLUSTER PROCESSING ABORTED (1)\n"
+#                        spikesClusterEndIndex+=1
+#                    
+#                    nextSpikesIndices=self.numpy.where(spikesIndices>spikesClusterEndIndex)[0] #Indices (of spikesIndices list) of next spike to be processed
+#                    
+#                    
+#                    if len(nextSpikesIndices)>0:
+#                        i=nextSpikesIndices[0]  #Index (of spikesIndices list) of next spike to be processed
+#                        #print "NEXT SPIKE INDEX = "+str(i)
+#                        nextSpikesIndices=None
+#                    else:
+#                        nextSpikesIndices=None
+#                        break
+#    
+#                if len(spikesData)>0:
+#                    
+#                    print '  '+str(len(spikesData))+' SPIKES DETECTED FOR DATA FILE #'+str(n+1)+'\n'
+##                    
+##                    print '[Starting Index, Ending Index, Max [CH4] Index, Max [CH4] Value (ppm), Width (m), Plane Heading (deg VECT), Mean Height (ppmv), Mean Equivalent Height (ppmv), Spike Number,Spike Area, Spike CH4 Threshold, Spike Sigma]'+'\n'
+##                    
+##                    print str(spikesData) +'\n'
+#    
+#                    spikesDataArray.append(spikesData)
+#    
+#                else:
+#    
+#                    print 'NO SPIKE DETECTED (2) for data file #'+str(n+1)+'\n'
+#                    spikesDataArray.append([])
+#                
+#            else:
+#    
+#                print 'NO SPIKES DETECTED (1) for data file #'+str(n+1)+'\n'
+#                spikesDataArray.append([])
+#                
+#        return(spikesDataArray)     
+        
+        
+    def processSpikesData(self,ch4TimeArray,ch4Array,spikesDataArray):
+        
+        ch4BackgroundArray=[] #Array of lists that will contain CH4 measurements that are not part of spikes
+        timeBackgroundArray=[] #Array of lists that will contain time values corresponding to CH4 measurements that are not part of spikes
+        ch4SpikesArray=[] #Array of lists that will contain CH4 measurements that are actually part of spikes
+        spikesTimeArray=[] #Array of lists that will contain time values corresponding to CH4 measurements that are actually part of spikes
+        #t0Array=[] #List of t0 for different ch4 data files    
+
+        for n in range(0,len(ch4TimeArray)):
+        
+        
+            ch4Background=[] #List that will contain CH4 measurements that are not part of spikes
+            timeBackground=[] #List that will contain time values corresponding to CH4 measurements that are not part of spikes
+            ch4Spikes=[] #List that will contain CH4 measurements that are actually part of spikes
+            timeSpikes=[] #List that will contain time values corresponding to CH4 measurements that are actually part of spikes
+            #t0=flightTimeArray[n][0] #Beginning of flight (will be used int the plotCH4 method for scaling)
+            count=0
+    
+            if len(ch4TimeArray[n])!=len(ch4Array[n]):
+    
+                print 'Time array #'+str(n+1)+' and CH4 array #'+str(n+1)+' have different dimensions'+'\n'+'SPIKES PROCESSING ABORTED FOR DATA FILE #'+str(n+1)+'\n'
+    
+            else:
+                
+                if len(spikesDataArray)==0:
+                    
+#                    t0Array.append(t0)
+                    timeBackgroundArray.append([ch4TimeArray[n]])
+                    ch4BackgroundArray.append([ch4Array[n]])
+    
+                    print 'NO SPIKES DATA AVAILABLE''\n'
+                    
+                    
+
+                elif len(spikesDataArray[n])==0:
+                    
+#                    t0Array.append(t0)
+                    timeBackgroundArray.append([ch4TimeArray[n]])
+                    ch4BackgroundArray.append([ch4Array[n]])
+#    
+                    print 'NO SPIKES DATA AVAILABLE FOR DATA FILE #'+str(n+1)+'\n' 
+                    
+                    
+                    
+                else:
+                    
+                
+    
+                    ch4BackgroundBuffer=[]
+                    timeBackgroundBuffer=[]
+                    ch4SpikesBuffer=[]
+                    timeSpikesBuffer=[]
+    
+                    if spikesDataArray[n][0][0]!=0:
+                        
+                        for j in range(0,spikesDataArray[n][0][0]+1,1):
+                            ch4BackgroundBuffer.append(ch4Array[n][j])
+                            timeBackgroundBuffer.append(ch4TimeArray[n][j])
+                            count+=1
+                            
+                        if len(ch4BackgroundBuffer)>1:
+                            ch4Background.append(ch4BackgroundBuffer)
+                            timeBackground.append(timeBackgroundBuffer)
+                        
+    
+                    for i in range(0,len(spikesDataArray[n])-1,1):
+    
+                        ch4BackgroundBuffer=[]
+                        timeBackgroundBuffer=[]
+                        ch4SpikesBuffer=[]
+                        timeSpikesBuffer=[]
+                        
+                        for j in range(spikesDataArray[n][i][0],spikesDataArray[n][i][1]+1,1):
+                            ch4SpikesBuffer.append(ch4Array[n][j])
+                            timeSpikesBuffer.append(ch4TimeArray[n][j])
+                            count+=1
+    
+                        ch4Spikes.append(ch4SpikesBuffer)
+                        timeSpikes.append(timeSpikesBuffer)
+                        
+                        
+                        for j in range(spikesDataArray[n][i][1],spikesDataArray[n][i+1][0]+1,1):
+                            ch4BackgroundBuffer.append(ch4Array[n][j])
+                            timeBackgroundBuffer.append(ch4TimeArray[n][j])
+                            count+=1
+                        if len(ch4BackgroundBuffer)>1:
+                            ch4Background.append(ch4BackgroundBuffer)
+                            timeBackground.append(timeBackgroundBuffer)
+                        
+    
+    
+                    ch4BackgroundBuffer=[]
+                    timeBackgroundBuffer=[]
+                    ch4SpikesBuffer=[]
+                    timeSpikesBuffer=[]
+                        
+                            
+                    for j in range(spikesDataArray[n][-1][0],spikesDataArray[n][-1][1]+1,1):                    
+                        ch4SpikesBuffer.append(ch4Array[n][j])
+                        timeSpikesBuffer.append(ch4TimeArray[n][j])
+                        count+=1
+    
+                    ch4Spikes.append(ch4SpikesBuffer)
+                    timeSpikes.append(timeSpikesBuffer)
+                        
+                    for j in range(spikesDataArray[n][-1][1],len(ch4TimeArray[n]),1):
+                        ch4BackgroundBuffer.append(ch4Array[n][j])
+                        timeBackgroundBuffer.append(ch4TimeArray[n][j])
+                        count+=1
+    
+                    ch4Background.append(ch4BackgroundBuffer)
+                    timeBackground.append(timeBackgroundBuffer)
+                    
+    
+#                    if count!=len(ch4TimeArray[n]):
+#                        #print 'ERROR:some measurement points could not be taken into account in data file #'+str(n+1)+'!!!'+'\n'
+#                        #print 'Count= '+str(count)+'\n'
+#                        #print 'Time Length= ' +str(len(ch4TimeArray[n]))+'\n'
+#                       # print 'ch4 Length= ' +str(len(ch4Array[n]))+'\n'
+#                        
+#                    else:
+#    #                    print 'Count= '+str(count)+'\n'
+#    #                    print 'Time Length= ' +str(len(time))+'\n'
+#    #                    print 'ch4 Length= ' +str(len(ch4))+'\n'
+                        
+    
+                    if len(timeBackground)!=len(ch4Background):
+                        print 'ATTENTION, data arrays dimension error for data file #'+str(n+1)+'\n'
+                         
+                    if len(timeSpikes)!=len(ch4Spikes):
+                        print 'ATTENTION, data arrays dimension error for data file #'+str(n+1)+'\n'
+                    
+    ##                    print 'Time background: '+str(timeBackground)+'\n'
+    ##                    print 'CH4 background: '+str(ch4Background)+'\n'
+    ##                    print 'Time spikes: '+str(timeSpikes)+'\n'
+    ##                    print 'CH$ spikes: '+str(ch4Spikes)+'\n'
+            if len(spikesDataArray)!=0 and len(spikesDataArray[n])!=0:            
+                ch4BackgroundArray.append(ch4Background)
+                timeBackgroundArray.append(timeBackground)
+                ch4SpikesArray.append(ch4Spikes)
+                spikesTimeArray.append(timeSpikes)
+                
+            #t0Array.append(t0)
+        
+#        print t0Array
+#        
+#        print timeBackgroundArray
+#        
+        #print ch4BackgroundArray
+        
+        return(timeBackgroundArray,ch4BackgroundArray,spikesTimeArray,ch4SpikesArray)
+    
+    def  computeCH4BAckgroundConcentration(self,timeBackgroundArray,ch4BackgroundArray,minTime=0,maxTime=999999):
+
+        
+        
+        for n in range(0,len(timeBackgroundArray)):
+            
+            timeList=[]
+            ch4BackgroundList=[]
+            for i in range(0,len(timeBackgroundArray[n])):
+                for j in range(0,len(timeBackgroundArray[n][i])):
+                    timeList.append(timeBackgroundArray[n][i][j])
+                    ch4BackgroundList.append(ch4BackgroundArray[n][i][j])
+            
+            t0=self.numpy.min(timeList)
+            
+            if minTime!=0 and maxTime!=999999:
+                startIndex=self.numpy.where(timeList>=t0+minTime*60)[0][0]
+                endIndex=self.numpy.where(timeList<=t0+maxTime*60)[0][-1]
+                
+            else:
+                startIndex=0
+                endIndex=len(timeList)
+        
+            ch4Background=self.numpy.nanmedian(ch4BackgroundList[startIndex:endIndex])
+            
+            print 'CH4 MEDIAN BACKGROUND CONCENTRATION FOR FLIGHT # '+str(n)+' = '+str(ch4Background)+' ppmv\n'
+        
+        return(ch4Background)
+           
+
+    def computeSpikesLocation(self,ch4TimeArray,flightTimeArray,pathLatitudeArray,pathLongitudeArray,pathAltitudeArray,spikesDataArray):
+
+        spikesWidthArray=[]
+        spikesLatitudeArray=[]
+        spikesLongitudeArray=[]
+        spikesAltitudeArray=[]
+        spikesMaxTimeArray=[]
+        for n in range(0,len(ch4TimeArray)):
+       
+            spikesWidth=[]
+            spikesLatitude=[]
+            spikesLongitude=[]
+            spikesAltitude=[]
+            spikesMaxTime=[]
+    #        if self.numpy.all(self.numpy.diff(ch4Time) > 0)==False:
+    #            print 'Time values should be incresing, COMPUTATION ABORTED'
+    #            self.numpy.sort()
+    ##            sortedCH4TimeIndices = ch4Time.argsort()
+    ##            sorted = np.take(v, order, 0)
+    #            return()
+            
+            if True:
+    
+                for spikeData in spikesDataArray[n]:
+                    spikesLatitude.append(self.numpy.interp(ch4TimeArray[n][spikeData[2]],flightTimeArray[n],pathLatitudeArray[n])) #Interpolates pathLatitude over time
+                                                                                                            #value of spike's maximum
+                    spikesLongitude.append(self.numpy.interp(ch4TimeArray[n][spikeData[2]],flightTimeArray[n],pathLongitudeArray[n]))#Interpolates pathLongitude over time
+                     
+                    spikesAltitude.append(self.numpy.interp(ch4TimeArray[n][spikeData[2]],flightTimeArray[n],pathAltitudeArray[n])) #Interpolates pathLatitude over time
+                                                                                                            #value of spike's maximum                                                                                       #value of spike's maximum
+                    spikesWidth.append(spikeData[3])
+                    
+                    spikesMaxTime.append(ch4TimeArray[n][spikeData[2]])
+                
+            spikesWidthArray.append(spikesWidth)
+            spikesLatitudeArray.append(spikesLatitude)
+            spikesLongitudeArray.append(spikesLongitude)
+            spikesAltitudeArray.append(spikesAltitude)  
+            spikesMaxTimeArray.append(spikesMaxTime)
+            
+        # ATTENTION: Computed locations correspond to the location of the max [CH4] in the spikes    
+            
+#       for n in range(0,len(spikesLatitudeArray)):
+#            if len(spikesLatitudeArray[0])>0:
+#                print "SPIKES' MAX [CH4] LOCATIONS FOR DATASET # "+str(n+1)+': '+'\n'
+#            for i in range(0,len(spikesLatitudeArray[n])):
+#                print 'SPIKE # '+str(i+1)+': WEST-->EAST: '+str(spikesLongitudeArray[n][i])+'km, SOUTH-->NORTH= '+str(spikesLatitudeArray[n][i])+'km, ALTITUDE= '+str(spikesAltitudeArray[n][i])+'m'+'\n'            
+#        #return()
+        return(spikesMaxTimeArray,spikesLatitudeArray,spikesLongitudeArray,spikesAltitudeArray,spikesWidthArray)
+
+        
+    def computeCH4Map(self,ch4Array,spikesDataArray,ch4TimeArray,ch4MovingMedianArray,flightTimeArray,pathLatitudeArray,pathLongitudeArray,pathAltitudeArray):
+        
+        ch4EquivalentLatitudeArray=[] #Latitudes corresponding to every measurement point
+        ch4EquivalentLongitudeArray=[] #Longitudes corresponding to every measurement point
+        ch4EquivalentAltitudeArray=[] #Altitudes corresponding to every measurement point
+        # ch4Spikes=[] #Array containing CH4 measurements if measurement point belongs to a spike, ch4MovingMean otherwise
+        #ch4BackgroundSpikes=[] #Array containing ch4 equivalent background estimations if measurement point belongs to a spike, 0 otherwise
+        #ch4BackgroundArray=[] #Array containing CH4 Moving Mean if measurement point does not belong to a spike, equivalent background estimation otherwise
+        ch4EquivalentArray=[]    
+        
+        for n in range(0,len(ch4Array)):
+       
+       
+            ch4Latitude=[] #Latitudes corresponding to every measurement point
+            ch4Longitude=[] #Longitudes corresponding to every measurement point
+            ch4Altitude=[] #Altitudes corresponding to every measurement point
+           # ch4Spikes=[] #Array containing CH4 measurements if measurement point belongs to a spike, ch4MovingMean otherwise
+            #ch4BackgroundSpikes=[] #Array containing ch4 equivalent background estimations if measurement point belongs to a spike, 0 otherwise
+            ch4Background=[] #Array containing CH4 Moving Mean if measurement point does not belong to a spike, equivalent background estimation otherwise
+            
+            # spikesData.append([prevLowEndIndex,nextLowStartIndex,spikeMaxCH4Index,spikeMaxCH4, spikeWidth])
+            
+#            if self.numpy.all(self.numpy.diff(ch4TimeArray[n]) > 0)==False:
+#                print 'Time values should be incresing, COMPUTATION ABORTED'
+#                return()
+            
+            #else:
+            if(True):
+                for i in range(0,len(ch4TimeArray[n])):
+                    
+                    ch4Latitude.append(self.numpy.interp(ch4TimeArray[n][i],flightTimeArray[n],pathLatitudeArray[n])) #Interpolates pathLatitude over ch4 time value
+                    
+                    ch4Longitude.append(self.numpy.interp(ch4TimeArray[n][i],flightTimeArray[n],pathLongitudeArray[n]))#Interpolates pathLongitude over ch4 time value
+                     
+                    ch4Altitude.append(self.numpy.interp(ch4TimeArray[n][i],flightTimeArray[n],pathAltitudeArray[n])) #Interpolates pathAltitude over ch4 time value                                                                                      #value of spike's maximum
+               
+    #        nextBackgroundStart=0
+    #        for i in range(0,len(spikesData)):
+    #            for j in range(nextBackgroundStart,spikesData[i][0]):
+    #                ch4Spikes.append(ch4MovingMean[j])
+    #            for k in range(spikesData[i][0],spikesData[i][1]):
+    #                ch4Spikes.append(ch4[k])
+    #            nextBackgroundStart=spikesData[i][1]
+            
+            nextBackgroundStart=0
+            if len(spikesDataArray)>0 and  len(spikesDataArray[n])>0:
+                for i in range(0,len(spikesDataArray[n])):
+                    
+                    for j in range(nextBackgroundStart,spikesDataArray[n][i][0]):
+                        ch4Background.append(ch4MovingMedianArray[n][j])
+                        
+                    for k in range(spikesDataArray[n][i][0],spikesDataArray[n][i][1]):
+                        ch4Background.append(ch4MovingMedianArray[n][spikesDataArray[n][i][0]]+(k-spikesDataArray[n][i][0])*(ch4MovingMedianArray[n][spikesDataArray[n][i][1]]-ch4MovingMedianArray[n][spikesDataArray[n][i][0]])/(spikesDataArray[n][i][1]-spikesDataArray[n][i][0]))
+                    nextBackgroundStart=spikesDataArray[n][i][1]
+            else:
+                for i in range(0,len(ch4MovingMedianArray[n])):
+                    ch4Background=ch4MovingMedianArray[n]
+                
+            
+            ch4Equivalent=[] # = ch4Spikes-ch4Background, is equivalent to [ch4] if background were equal to 0
+            ch4EquivalentLatitude=[]
+            ch4EquivalentLongitude=[]
+            ch4EquivalentAltitude=[]     
+            if len(spikesDataArray)>0 and  len(spikesDataArray[n])>0:
+                for i in range(0,len(spikesDataArray[n])):
+                     ch4Lat=[]
+                     ch4Lon=[]
+                     ch4Alt=[]
+                     ch4Diff=[]
+                     for k in range(spikesDataArray[n][i][0],spikesDataArray[n][i][1]):
+                        diff=ch4Array[n][k]-ch4Background[k]
+                        ch4Diff.append(diff)
+                        ch4Lat.append(ch4Latitude[k])
+                        ch4Lon.append(ch4Longitude[k])
+                        ch4Alt.append(ch4Altitude[k])
+                     ch4Equivalent.append(ch4Diff)
+                     ch4EquivalentLatitude.append(ch4Lat)
+                     ch4EquivalentLongitude.append(ch4Lon)
+                     ch4EquivalentAltitude.append(ch4Alt)
+            
+                
+        
+                ch4EquivalentArray.append(ch4Equivalent)
+                ch4EquivalentLatitudeArray.append(ch4EquivalentLatitude)
+                ch4EquivalentLongitudeArray.append(ch4EquivalentLongitude)
+                ch4EquivalentAltitudeArray.append(ch4EquivalentAltitude)
+            
+    
+        
+        
+        return(ch4EquivalentLatitudeArray,ch4EquivalentLongitudeArray,ch4EquivalentAltitudeArray,ch4EquivalentArray)
+   
+   
+   
+   
+    def computeSpikesPasses4(self,passesFlightTimeEPOCHArray,ch4ThresholdList,stdDevFactorList,minSpikeHeight,ch4TimeArray,ch4Array,ch4MovingMedianArray,ch4StandardDeviationArray,flightTimeArray,pathLatitudeArrayKm,pathLongitudeArrayKm,pathAltitudeArray):
+        
+        spikesPassesDataArray=[] #Array that will contain all the spikes information
+        
+        print 'CH4 SIGNAL PROCESSING \n'
+        
+        for n in range(0,len(ch4Array)):
+            
+            spikesPassesDataArrayBuffer=[]
+            
+            print 'PROCESSING DATA FILE # '+str(n)+'\n'
+            
+            for p in range(0,len(passesFlightTimeEPOCHArray[n])):
+                
+                
+                
+                print 'PROCESSING PASS # '+str(p)+'\n'
+                
+                ch4Pass=self.numpy.interp(passesFlightTimeEPOCHArray[n][p],ch4TimeArray[n],ch4Array[n])
+                ch4MovingMedianPass=self.numpy.interp(passesFlightTimeEPOCHArray[n][p],ch4TimeArray[n],ch4MovingMedianArray[n])
+                ch4StandardDeviationPass=self.numpy.interp(passesFlightTimeEPOCHArray[n][p],ch4TimeArray[n],ch4StandardDeviationArray[n])
+                
+                spikesMinJumpList=[]
+                spikesIndices=[]
+                lowsIndices=[]
+                
+                spikesData=[] #List that will be apended to spikesDataArray, it contains all sthe spikes information for each flight
+        
+                spikesMinJumpList=self.numpy.maximum(ch4StandardDeviationPass*stdDevFactorList[n],ch4ThresholdList[n]) #Minimum jump from mean [CH4] to spot a spike
+                
+                spikesIndices = self.numpy.where(ch4Pass >= ch4MovingMedianPass + spikesMinJumpList)[0] #Indices of ch4 list that are spotted as being part of "spikes" intervals of ch4
+                lowsIndices = self.numpy.where(ch4Pass <ch4MovingMedianPass + spikesMinJumpList)[0]         #Indices of ch4 list that are spotted as being part of "lows" intervals of ch4 (everything that's not part of a spike)
+                
+                spikesMinJumpList=None
+                                                                                                       
+                spikesClusterNb=0
+                spikesCount=0
+                
+                
+        
+                if len(spikesIndices)>0:
+                    
+                    i=0 #Index (of spikeIndices list) that will be incemented in order to process values of spikeIndices
+                    
+                    while True:
+    
+                        '''IN THE FOLLOWING WE DEFINE START AND END INDICES OF THE CURRENt SPIKE'''
+                        try:
+                            array=self.numpy.where(lowsIndices<spikesIndices[i])[0]
+                            spikeStartIndex=lowsIndices[array[-1]]
+                            array=None
+                        except:
+                            spikeStartIndex=0
+                        try:   
+                            array=self.numpy.where(lowsIndices>spikeStartIndex)[0]
+                            spikeEndIndex=lowsIndices[array[0]]
+                            array=None
+                            #Index (of lowIndices list) of first element of lowIndices following the currently processed spike
+                        except:
+                            spikeEndIndex=spikesIndices[-1]
+                        
+                        spikesClusterEndIndex=spikeEndIndex
+                            
+                        '''END'''   
+    #                    print 'SIZES OF spikeStartIndex AND spikeEndIndex:'
+    #                    print self.sys.getsizeof(spikeStartIndex)
+    #                    print self.sys.getsizeof(spikeEndIndex)
+                        
+                        if spikeEndIndex-spikeStartIndex>=2:
+                            
+                            spikesClusterNb+=1
+                            
+                            print 'PROCESSING SPIKES CLUSTER # '+str(spikesClusterNb)+'\n'
+                            
+                            '''IN THE FOLLOWING WE AJUST CURRENt SPIKE'S LEGS SO THAT IT STARTS WITH INCREASING AND ENDS WITH DECREASING CONCENTRATION WHILE bEINg AS LONG AS POSSIBLE'''
+                            
+                            climbStart=False
+                            while climbStart==False and spikeEndIndex-spikeStartIndex>=2:
+                                
+                                CH4DiffStart=(ch4Pass[spikeStartIndex+1]-ch4Pass[spikeStartIndex])/(passesFlightTimeEPOCHArray[n][p][spikeStartIndex+1]-passesFlightTimeEPOCHArray[n][p][spikeStartIndex])
+                                
+                                if CH4DiffStart>0 and spikeStartIndex-1>0:
+                                    
+                                    CH4DiffBefore=(ch4Pass[spikeStartIndex]-ch4Pass[spikeStartIndex-1])/(passesFlightTimeEPOCHArray[n][p][spikeStartIndex]-passesFlightTimeEPOCHArray[n][p][spikeStartIndex-1])
+                                
+                                    if CH4DiffBefore>0:
+                                        spikeStartIndex-=1
+                                        
+                                    else:
+                                        climbStart=True
+                                        
+                                elif CH4DiffStart<=0 and spikeStartIndex+1<len(ch4Pass):
+                                    spikeStartIndex+=1
+                                    
+                                else:
+                                    climbStart=True
+                            
+                            CH4DiffStart=None
+                            CH4DiffBefore=None
+                            
+                            
+                            climbEnd=False
+                            while climbEnd==False and spikeEndIndex-spikeStartIndex>=2:
+                                
+                                CH4DiffEnd=(ch4Pass[spikeEndIndex]-ch4Pass[spikeEndIndex-1])/(passesFlightTimeEPOCHArray[n][p][spikeEndIndex]-passesFlightTimeEPOCHArray[n][p][spikeEndIndex-1])
+                                
+                                if CH4DiffEnd<0 and spikeEndIndex+1<len(ch4Pass):
+                                    
+                                    CH4DiffAfter=(ch4Pass[spikeEndIndex+1]-ch4Pass[spikeEndIndex])/(passesFlightTimeEPOCHArray[n][p][spikeEndIndex+1]-passesFlightTimeEPOCHArray[n][p][spikeEndIndex])
+                                
+                                    if CH4DiffAfter<0:
+                                        spikeEndIndex+=1
+                                        
+                                    else:
+                                        climbEnd=True
+                                        
+                                elif CH4DiffEnd>=0 and spikeEndIndex-1>=0:
+                                    spikeEndIndex-=1   
+                                    
+                                else:
+                                    climbEnd=True
+                                    
+                            CH4DiffEnd=None
+                            CH4DiffAfter=None
+                            '''END'''
+                            
+                            if spikeEndIndex-spikeStartIndex>=2:
+                                
+                                '''IN THE FOLLOWING WE GET MAXIMA AND MINIMA OF THE CURRENT SPIKE'''
+                                spikeMaxima=[]
+                                spikeMaximaIndex=[]
+                                
+                                spikeMinimaIndex=[]
+                                
+                                for k in range(spikeStartIndex,spikeEndIndex-1):
+                                    
+                                    spikeCH4Diff=(ch4Pass[k+1]-ch4Pass[k])/(passesFlightTimeEPOCHArray[n][p][k+1]-passesFlightTimeEPOCHArray[n][p][k])
+                                    spikeCH4DiffNext=(ch4Pass[k+2]-ch4Pass[k+1])/(passesFlightTimeEPOCHArray[n][p][k+2]-passesFlightTimeEPOCHArray[n][p][k+1])
+                                    
+                                    if spikeCH4Diff>0 and spikeCH4DiffNext<=0:
+                                        spikeMaxima.append(ch4Pass[k+1])
+                                        spikeMaximaIndex.append(k+1)
+                                        
+                                    elif spikeCH4Diff<0 and spikeCH4DiffNext>=0:
+                                        
+                                        spikeMinimaIndex.append(k+1)
+                                '''END'''
+                                spikeCH4Diff=None
+                                spikeCH4DiffNext=None
+                                        
+                                spikeStartIndexList=[]
+                                spikeEndIndexList=[]
+                                spikeBottomIndexList=[]
+                                spikeMaximaIndexList=[]
+                                spikeMaximaList=[]
+                                
+                                for j in range(0,len(spikeMaxima)):
+                                    spikeStartIndex2=0
+                                    spikeEndIndex2=0
+                                       
+                                    spikeMaximaIndexList.append(spikeMaximaIndex[j])
+                                    spikeMaximaList.append(spikeMaxima[j])
+                                    
+                                    '''In the following we split the current spike into several sub-spikes that have only one local maximum''' 
+                                    
+                                    try:
+                                        array=self.numpy.where(self.numpy.ndarray(spikeMinimaIndex)<spikeMaximaIndex[j])
+                                        spikeStartIndex2=spikeMinimaIndex[array[0][-1]]
+                                        array=None
+                                    except:
+                                        spikeStartIndex2=spikeStartIndex
+                                    
+                                    try:
+                                        array=self.numpy.where(self.numpy.ndarray(spikeMinimaIndex)>spikeMaximaIndex[j])
+                                        spikeEndIndex2=spikeMinimaIndex[array[0][0]]
+                                        array=None
+                                    except:
+                                        spikeEndIndex2=spikeEndIndex
+                                    
+                                    '''END'''
+                                    
+                                    '''THEN WE CUT THEIR LEGS SO THAT THEIR START AND END POINTS ARE APPROXIMATELY AT THE SAME HEIGHT'''
+                                    
+                                    if ch4Pass[spikeStartIndex2]>=ch4Pass[spikeEndIndex2]:
+    
+                                        spikeBottomIndexList.append(spikeStartIndex2)                                        
+                                        
+                                        l=0
+                                        while ch4Pass[spikeStartIndex2]>ch4Pass[spikeEndIndex2-l]:
+                                            l+=1
+                                        k=l-1
+                                        
+                                        spikeEndIndex2-=k
+                                        
+                                    elif ch4Pass[spikeStartIndex2]<ch4Pass[spikeEndIndex2]:
+    
+                                        spikeBottomIndexList.append(spikeEndIndex2)                                        
+                                        
+                                        l=0
+                                        while ch4Pass[spikeStartIndex2+l]<ch4Pass[spikeEndIndex2]:
+                                            l+=1
+                                        k=l-1
+                                        
+                                        spikeStartIndex2+=k
+                                    '''END'''    
+                                    
+                                    
+                                    '''THEN EVERY SUB-SPIKES ARE SAVED INTO THE FOLLOWING LISTS'''
+                                    spikeStartIndexList.append(spikeStartIndex2)
+                                    spikeEndIndexList.append(spikeEndIndex2)
+                                    '''END'''   
+                                print '# SPIKES IN CURRENT CLUSTER = '+str(len(spikeStartIndexList))+'\n'
+                                
+                                
+                                '''NOW WE PROCESS SUB-SPIKES ONE BY ONE'''
+                                
+                                for j in range(0,len(spikeStartIndexList)):    
+                                    
+                                    print 'PROCESSING SPIKE # '+str(j+1)+' / '+str(len(spikeStartIndexList))+'\n'
+                                    
+                                    if spikeEndIndexList[j]-spikeStartIndexList[j]>=2:
+                                        
+                                        '''GET SPIKE MAXIMUM'''                            
+                                        spikeMaxCH4 = spikeMaximaList[j]
+                                        spikeMaxCH4Index = spikeMaximaIndexList[j]                                    
+                                        '''END'''
+                                         
+                                        infTimeIndices=self.numpy.where(flightTimeArray[n]<=passesFlightTimeEPOCHArray[n][p][spikeStartIndexList[j]])[0]
+                                        
+                                        if len(infTimeIndices)>0:
+                                            flightStartIndex=infTimeIndices[-1]
+                                            lInf=len(infTimeIndices)
+                                            infTimeIndices=None
+                                        else:
+                                            flightStartIndex=0
+                                            lInf=len(infTimeIndices)
+                                            infTimeIndices=None
+                                        
+                                        supTimeIndices=self.numpy.where(flightTimeArray[n]>=passesFlightTimeEPOCHArray[n][p][spikeEndIndexList[j]])[0]
+                                            
+                                        if len(supTimeIndices)>0:
+                                            flightEndIndex=supTimeIndices[0]
+                                            lSup=len(supTimeIndices)
+                                            supTimeIndices=None
+                                        else:
+                                            flightEndIndex=len(flightTimeArray[n])-1
+                                            lSup=len(supTimeIndices)
+                                            supTimeIndices=None
+                                            
+                                        if lInf==0 and lSup==0:
+                                            print 'SPIKE PROCESSING ABORTED (2)'
+                                            
+                                                                                    
+                                        else:
+                                            
+                                            '''COMPUTE SPIKE HEADING'''
+                                            spikeLonExtent=1000*(pathLongitudeArrayKm[n][flightEndIndex]-pathLongitudeArrayKm[n][flightStartIndex])
+                                            spikeLatExtent=1000*(pathLatitudeArrayKm[n][flightEndIndex]-pathLatitudeArrayKm[n][flightStartIndex])
+                                            
+                                            
+                                            spikeHeading=0
+                                            if  spikeLonExtent>=0:
+                                                spikeHeading=self.numpy.arccos(spikeLatExtent/self.numpy.sqrt(spikeLonExtent**2+spikeLatExtent**2))*180/3.14
+                                     
+                                            elif  spikeLonExtent<0:
+                                                spikeHeading=360-self.numpy.arccos(spikeLatExtent/self.numpy.sqrt(spikeLonExtent**2+spikeLatExtent**2))*180/3.14
+                                            else:
+                                                spikeHeading=float('NaN')
+                                            
+                                            spikeLonExtent=None
+                                            spikeLatExtent=None
+                                            
+                                            '''END'''
+                                            
+                                            '''COMPUTE SPIKE WIDTH'''
+                                            
+                                            '''In the following we interpolate the time,latitude,longitude and altitude values (end and start) of the spike
+                                            so that its starting end ending points are at the same [CH4] for width calculation purposes'''
+                                           
+                                            if ch4Pass[spikeStartIndexList[j]]<ch4Pass[spikeEndIndexList[j]]:
+                                                
+                                                spikeEndLatKm=pathLatitudeArrayKm[n][flightEndIndex]
+                                                spikeEndLonKm=pathLongitudeArrayKm[n][flightEndIndex]
+                                                spikeEndAlt=pathAltitudeArray[n][flightEndIndex]
+                                                
+                                                C1=ch4Pass[spikeStartIndexList[j]]
+                                                C2=ch4Pass[spikeStartIndexList[j]+1]
+                                                C3=ch4Pass[spikeEndIndexList[j]]
+                                                
+                                                X1=pathLatitudeArrayKm[n][flightStartIndex]
+                                                X2=pathLatitudeArrayKm[n][flightStartIndex+1]
+                                                
+                                                X3=X1+(C3-C1)*(X2-X1)/(C2-C1)
+                                                
+                                                spikeStartLatKm=X3
+                                                
+                                                X1=pathLongitudeArrayKm[n][flightStartIndex]
+                                                X2=pathLongitudeArrayKm[n][flightStartIndex+1]
+                                                
+                                                X3=X1+(C3-C1)*(X2-X1)/(C2-C1)
+                                                
+                                                spikeStartLonKm=X3
+                                                
+                                                X1=pathAltitudeArray[n][flightStartIndex]
+                                                X2=pathAltitudeArray[n][flightStartIndex+1]
+                                                
+                                                X3=X1+(C3-C1)*(X2-X1)/(C2-C1)
+                                                
+                                                spikeStartAlt=X3
+                                                
+                                                X1=None
+                                                X2=None
+                                                X3=None
+                                                
+                                                C1=None
+                                                C2=None
+                                                C3=None
+                                                
+                                            elif ch4Pass[spikeStartIndexList[j]]>=ch4Pass[spikeEndIndexList[j]]:
+                                                
+                                                spikeStartLatKm=pathLatitudeArrayKm[n][flightStartIndex]
+                                                spikeStartLonKm=pathLongitudeArrayKm[n][flightStartIndex]
+                                                spikeStartAlt=pathAltitudeArray[n][flightStartIndex]
+                                                
+                                                C1=ch4Pass[spikeEndIndexList[j]-1]
+                                                C2=ch4Pass[spikeEndIndexList[j]]
+                                                C3=ch4Pass[spikeStartIndexList[j]]
+                                                
+                                                X1=pathLatitudeArrayKm[n][flightEndIndex-1]
+                                                X2=pathLatitudeArrayKm[n][flightEndIndex]
+                                                
+                                                X3=X1+(C3-C1)*(X2-X1)/(C2-C1)
+                                                
+                                                spikeEndLatKm=X3
+                                                
+                                                X1=pathLongitudeArrayKm[n][flightEndIndex-1]
+                                                X2=pathLongitudeArrayKm[n][flightEndIndex]
+                                                
+                                                X3=X1+(C3-C1)*(X2-X1)/(C2-C1)
+                                                
+                                                spikeEndLonKm=X3
+                                                
+                                                X1=pathAltitudeArray[n][flightEndIndex-1]
+                                                X2=pathAltitudeArray[n][flightEndIndex]
+                                                
+                                                X3=X1+(C3-C1)*(X2-X1)/(C2-C1)
+                                                
+                                                spikeEndAlt=X3
+                                                
+                                                X1=None
+                                                X2=None
+                                                X3=None
+                                                
+                                                C1=None
+                                                C2=None
+                                                C3=None
+                                                
+                                            
+                                            spikeWidth=self.numpy.sqrt((1000*spikeEndLonKm-1000*spikeStartLonKm)**2+(1000*spikeEndLatKm-1000*spikeStartLatKm)**2+(spikeEndAlt-spikeStartAlt)**2)
+                                            
+                                            spikeStartLatKm=None
+                                            spikeStartLonKm=None
+                                            spikeStartAlt=None
+                                                
+                                            spikeEndLatKm=None
+                                            spikeEndLonKm=None
+                                            spikeEndAlt=None
+                                            
+                                            
+                                            '''END'''
+                                            
+                                            '''DEFINE SPIKE CH4 BACKGROUND (=MOVING MEDIAN)'''
+                                            spikeCH4Background=[]
+                                            spikeCH4Background=self.numpy.interp(flightTimeArray[n][flightStartIndex:flightEndIndex],passesFlightTimeEPOCHArray[n][p],ch4MovingMedianPass)
+                                            if  flightStartIndex+1==flightEndIndex:
+                                                spikeCH4Background=self.numpy.hstack((spikeCH4Background,self.numpy.array([ch4MovingMedianPass[spikeEndIndexList[j]]])))
+                                            
+                                            flightStartIndex=None
+                                            flightEndIndex=None
+                                            '''END'''  
+                                            
+    
+                                            
+                                            '''COMPUTE SPIKE EQUIVALENT AND BOTTOM HEIGHTS'''
+                                            spikeEquivalentHeight=spikeMaxCH4-self.scipy.stats.nanmean(spikeCH4Background)
+                                            spikeCH4BottomHeight=ch4Pass[spikeBottomIndexList[j]]-self.scipy.stats.nanmean(spikeCH4Background)    
+                                            '''END'''
+                                            spikeCH4Background=None
+                                            
+                                            '''COMPUTE SPIKE SIGMA'''
+                                            if spikeEquivalentHeight>0 and spikeCH4BottomHeight>=0 and spikeEquivalentHeight>spikeCH4BottomHeight:
+                                                spikeSigma=spikeWidth/(2*self.math.sqrt(2*self.math.log(spikeEquivalentHeight/spikeCH4BottomHeight))) 
+                                            
+                                            else:
+                                                spikeSigma=float('NaN')
+                                                #print 'WARNING! SPIKE SIGMA COMPUTATION ERROR FOR SPIKE#'+str(spikesCount)+' FLIGHT#'+str(n)+'\n'
+                                            
+                                            
+                                            
+                                            '''END'''     
+                                                
+                                            
+                                            
+                                            if spikeWidth>0 and spikeMaxCH4<50 and spikeEndIndexList[j]-spikeStartIndexList[j]>=2 and (spikeEquivalentHeight-spikeCH4BottomHeight)>minSpikeHeight:
+                                                spikesCount+=1
+                                                spikesData.append([spikeStartIndexList[j],spikeEndIndexList[j],spikeMaxCH4Index,spikeMaxCH4,999,spikeHeading,999,spikeEquivalentHeight,len(spikesData),999,spikeCH4BottomHeight,spikeSigma])
+                                                #print 'SPIKE # '+str(spikesCount)
+                                                print 'spikesData VARIABLE SIZE (BYTES) = '+str(self.sys.getsizeof(spikesData))+'\n'
+                                            else:
+                                                print "SPIKE PROCESSING ABORTED (3)"
+                                                
+                                            spikeWidth=None
+                                            spikeCH4BottomHeight=None
+                                            spikeEquivalentHeight=None
+                                            spikeMaxCH4Index=None
+                                            spikeMaxCH4=None
+                                            spikeHeading=None
+                                            spikeSigma=None
+                                            
+                                    else:
+                                        print "SPIKE PROCESSING ABORTED (1)"
+                                        
+                                spikeStartIndexList=None
+                                spikeEndIndexList=None
+                            
+                            else:
+                                print "SPIKES CLUSTER PROCESSING ABORTED (2)"
+                                spikesClusterEndIndex+=1
+                        
+                        else:
+                            print "SPIKES CLUSTER PROCESSING ABORTED (1)"
+                            spikesClusterEndIndex+=1
+                        
+                        nextSpikesIndices=self.numpy.where(spikesIndices>spikesClusterEndIndex)[0] #Indices (of spikesIndices list) of next spike to be processed
+                        
+                        
+                        if len(nextSpikesIndices)>0:
+                            i=nextSpikesIndices[0]  #Index (of spikesIndices list) of next spike to be processed
+                            print "NEXT SPIKE INDEX = "+str(i)
+                            nextSpikesIndices=None
+                        else:
+                            nextSpikesIndices=None
+                            break
+        
+                    if len(spikesData)>0:
+                        
+                        print '  '+str(len(spikesData))+' SPIKES DETECTED FOR DATA FILE #'+str(n+1)+', PASS # '+str(p)+'\n'
+    #                    
+    #                    print '[Starting Index, Ending Index, Max [CH4] Index, Max [CH4] Value (ppm), Width (m), Plane Heading (deg VECT), Mean Height (ppmv), Mean Equivalent Height (ppmv), Spike Number,Spike Area, Spike CH4 Threshold, Spike Sigma]'+'\n'
+    #                    
+    #                    print str(spikesData) +'\n'
+                        
+                        passStartIndex=self.numpy.where(ch4TimeArray[n]>=passesFlightTimeEPOCHArray[n][p][0])[0][0]
+                        
+                        passSpikesStartIndex=int(passStartIndex+spikesData[0][0])
+                        passSpikesEndIndex=int(passStartIndex+spikesData[-1][1])
+                        print passSpikesStartIndex
+                        print passSpikesEndIndex
+                        passData=self.numpy.zeros(12)
+                        
+                        passData[0]=passSpikesStartIndex
+                        passData[1]=passSpikesEndIndex
+                        passData[4]=999
+                        passData[5]=999
+                        passData[6]=999
+                        
+                        passData[8]=len(spikesData)
+                        passData[9]=999
+                        passData[10]=999
+                        
+                        passmaxCH4=0
+                        passmaxCH4Index=0
+                        
+                        for k in range(0,len(spikesData)):
+                            
+                            if spikesData[k][3]>passmaxCH4:
+                                passmaxCH4=spikesData[k][3]
+                                passmaxCH4Index=int(passStartIndex+spikesData[k][2])
+                            passData[7]+=spikesData[k][7]
+                            passData[11]+=spikesData[k][11]
+                        
+                        passData[7]/=len(spikesData)
+                        
+                        passData[2]=passmaxCH4Index
+                        passData[3]=passmaxCH4
+                        
+                        
+                        spikesPassesDataArrayBuffer.append(passData)
+        
+                    else:
+        
+                        print 'NO SPIKE DETECTED (2) FOR DATA FILE # '+str(n+1)+', PASS # '+str(p)+'\n'
+                        #spikesPassesDataArrayBuffer.append([])
+                    
+                else:
+        
+                    print 'NO SPIKES DETECTED (1) FOR DATA FILE # '+str(n+1)+', PASS # '+str(p)+'\n'
+                    #spikesPassesDataArrayBuffer.append([])
+                    
+            spikesPassesDataArray.append(spikesPassesDataArrayBuffer)
+            
+        for n in range(0,len(spikesPassesDataArray)):
+            
+            print 'FLIGHT # '+str(n)+': '+str(len(spikesPassesDataArray[n]))+' PASSES WITH AT LEAST ONE SPIKE DETECTED OVER '+str(len(passesFlightTimeEPOCHArray[n]))+' PASSES \n'
+                
+        return(spikesPassesDataArray)     
+   
+   
+
+    
+    def computePassesLocation(self,ch4TimeArray,flightTimeArray,pathLatitudeArray,pathLongitudeArray,pathAltitudeArray,ch4Array,spikesPassesDataArray):
+
+        passesWidthArray=[]
+        passesLatitudeArray=[]
+        passesLongitudeArray=[]
+        passesAltitudeArray=[]
+        passesMaxTimeArray=[]
+        for n in range(0,len(spikesPassesDataArray)):
+       
+            passesWidth=[]
+            passesLatitude=[]
+            passesLongitude=[]
+            passesAltitude=[]
+            passesMaxTime=[]
+    
+            for spikesPassData in spikesPassesDataArray[n]:
+                
+                
+                passMaxTime=ch4TimeArray[n][int(spikesPassData[2])] 
+                
+                passesMaxTime.append(passMaxTime)
+                
+                passesLatitude.append(self.numpy.interp(passMaxTime,flightTimeArray[n],pathLatitudeArray[n])) #Interpolates pathLatitude over time
+                                                                                                      #value of spike's maximum
+                passesLongitude.append(self.numpy.interp(passMaxTime,flightTimeArray[n],pathLongitudeArray[n]))#Interpolates pathLongitude over time
+                 
+                passesAltitude.append(self.numpy.interp(passMaxTime,flightTimeArray[n],pathAltitudeArray[n])) #Interpolates pathLatitude over time
+                
+                
+                
+                
+                
+                passStartTime=ch4TimeArray[n][int(spikesPassData[0])]          
+                passStartLatKm=self.numpy.interp(passStartTime,flightTimeArray[n],pathLatitudeArray[n])
+                passStartLonKm=self.numpy.interp(passStartTime,flightTimeArray[n],pathLongitudeArray[n])
+                passStartAlt=self.numpy.interp(passStartTime,flightTimeArray[n],pathAltitudeArray[n])
+                
+                
+                passEndTime=ch4TimeArray[n][int(spikesPassData[1])]          
+                passEndLatKm=self.numpy.interp(passEndTime,flightTimeArray[n],pathLatitudeArray[n])
+                passEndLonKm=self.numpy.interp(passEndTime,flightTimeArray[n],pathLongitudeArray[n])
+                passEndAlt=self.numpy.interp(passEndTime,flightTimeArray[n],pathAltitudeArray[n])
+
+
+                passWidth=self.numpy.sqrt((1000*passEndLonKm-1000*passStartLonKm)**2+(1000*passEndLatKm-1000*passStartLatKm)**2+(passEndAlt-passStartAlt)**2)
+                
+                passesWidth.append(passWidth)
+                
+                
+                
+            passesWidthArray.append(passesWidth)
+            passesLatitudeArray.append(passesLatitude)
+            passesLongitudeArray.append(passesLongitude)
+            passesAltitudeArray.append(passesAltitude)  
+            passesMaxTimeArray.append(passesMaxTime)
+            
+        # ATTENTION: Computed locations correspond to the location of the max [CH4] in the spikes    
+            
+#       for n in range(0,len(spikesLatitudeArray)):
+#            if len(spikesLatitudeArray[0])>0:
+#                print "SPIKES' MAX [CH4] LOCATIONS FOR DATASET # "+str(n+1)+': '+'\n'
+#            for i in range(0,len(spikesLatitudeArray[n])):
+#                print 'SPIKE # '+str(i+1)+': WEST-->EAST: '+str(spikesLongitudeArray[n][i])+'km, SOUTH-->NORTH= '+str(spikesLatitudeArray[n][i])+'km, ALTITUDE= '+str(spikesAltitudeArray[n][i])+'m'+'\n'            
+#        #return()
+        return(passesMaxTimeArray,passesLatitudeArray,passesLongitudeArray,passesAltitudeArray,passesWidthArray)
+        
+        
+    def computeCH4Background(self,ch4Array):
+        
+        
+        CH4BackgroundList=[]
+        for n in range(0,len(ch4Array)):
+            #CH4BackgroundList.append(self.numpy.nanmedian(ch4Array))
+            CH4BackgroundList.append(self.numpy.median(ch4Array))
+            
+        return(CH4BackgroundList)
+        
+    def computePassesCH4Array(self,passesFlightTimeEPOCHArray,CH4Array,CH4TimeEPOCHArray):
+        
+        passesCH4Array=[]
+        
+        for n in range(0,len(passesFlightTimeEPOCHArray)):
+            
+            passesCH4=[]
+            
+            for p in range(0,len(passesFlightTimeEPOCHArray[n])):
+                
+                passStartIndex=self.numpy.where(CH4TimeEPOCHArray[n]<=passesFlightTimeEPOCHArray[n][p][0])[0][-1]
+                passEndIndex=self.numpy.where(CH4TimeEPOCHArray[n]>=passesFlightTimeEPOCHArray[n][p][-1])[0][0]
+                
+                passesCH4.append(CH4Array[passStartIndex:passEndIndex])
+                
+        passesCH4Array.append(passesCH4)
+        
+        return(passesCH4Array)
+     
+    
